@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('fonts/Inter-Regular.woff2') format('woff2'),
+    url('fonts/Inter-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+nav{
+    font-family: Inter, sans-serif;
+    margin: 3%;
+}
+
+.bluebg{
+    background-color: #39537A;
+}
+
+.contenedor {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100px;
+    text-align: center;
+}
+
+.items:nth-child(1) {
+    outline: #39537A solid 2px;
+    color: #FFFFFF;
+    order: 0;
+    width: 10%;
+    height: 100px;
+}
+
+.items:nth-child(2) {
+    color: #FFFFFF;
+    outline: #000000 solid 2px;
+    background: linear-gradient(180deg, rgba(14,98,144,1) 0%, rgba(4,20,29,1) 100%);
+    padding-left: 2%;
+    text-align: left;
+    display: block;
+    order: 1;
+    width: 90%;
+    height: 100px;
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.textitem{
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
