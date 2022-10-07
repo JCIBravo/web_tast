@@ -55,8 +55,9 @@ nav{
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
-
+/**
 .textitem{
     margin-top: 25px;
     margin-bottom: 10px;
 }
+**/
