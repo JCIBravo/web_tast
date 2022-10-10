@@ -10,25 +10,34 @@
   <link rel="stylesheet" href="../css/index.css">
 
   <meta name="theme-color" content="#fafafa">
+
+  <script src="crearTarea.js"></script>
+
+
 </head>
 <body>
     <header>
       <div class="menu">
         <nav>
           <ul>
-            <li><a href=""/>Mis tareas por hacer</li>
-            <li><a href=""/>Mis tareas hechas</li>
-            <li><a href=""/>Crear tarea</li>
-            <li><a href=""/>Reordenar tareas</li>
+            <li><a href="">Mis tareas por hacer</a></li>
+            <li><a href="">Mis tareas hechas</a></li>
+            <li><a href="">Crear tarea</a></li>
+            <li><a href="">Reordenar tareas</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
+    <form id="formulari1" onsubmit="volumenCilindre(event)">
+      <input id="title" type="text" name="titulo">
+      <input id="description" type="text" name="descripcion">
+      <input type="submit" value="Crear Tarea">
+    </form>
     <nav class="bluebg">
         <div class="contenedor">
             <div class="items">
-                <input class="vertical-center" type="image" src="./img/botones/sincheck.png" name="completado" alt="Marcar como completado" height="45" width="45">
+                <input class="vertical-center" type="image" src="./img/botones/completado.png" name="completado" alt="Marcar como completado" height="45" width="45">
             </div>
             <div class="items">
                 <p class="textitem">Títol recordatori</p>
