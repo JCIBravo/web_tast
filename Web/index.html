@@ -28,10 +28,12 @@
               <input type="text" id="tareaNombre" required>
               <label> || Fecha:</label>
               <input type="date" id="tareaDate" required>
+              <input type="button" onclick="setTodayValue()" value="Hoy">
               <label> || Hora:</label>
               <input type="time" id="tareaTime" required>
-              <input type="button" onclick="addTask()" value="Envia">
+              <input type="button" onclick="addTask()" value="Crear tarea">
             </form>
+            <h5><i>(Todos los datos se borran al recargar la página)</i></h5>
             <br>
           </div>
         </nav>

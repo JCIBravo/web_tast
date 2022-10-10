@@ -56,8 +56,8 @@ nav{
     transform: translateY(-50%);
 }
 
-#tasca0 {
-  display: none;
+#generarTasca{
+  text-align: center;
 }
 
 /**

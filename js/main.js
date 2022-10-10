@@ -15,7 +15,19 @@ function showTaskCreator(){
   }
 }
 
+function setTodayValue(){
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  today = yyyy + '-' + mm + '-' + dd;
+  document.getElementById("tareaDate").value = today;
+}
+
 function addTask(){
+  date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
+  Date.parse()
+
   var navToAppend = document.getElementsByTagName("nav")[1];
   taskID++;
 
