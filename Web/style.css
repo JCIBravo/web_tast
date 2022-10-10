@@ -55,6 +55,11 @@ nav{
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+
+#tasca0 {
+  display: none;
+}
+
 /**
 .textitem{
     margin-top: 25px;

@@ -8,33 +8,37 @@
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/index.css">
-
   <meta name="theme-color" content="#fafafa">
+  <script src="../js/main.js"></script>
+
 </head>
 <body>
     <header>
       <div class="menu">
         <nav>
           <ul>
-            <li><a href=""/>Mis tareas por hacer</li>
-            <li><a href=""/>Mis tareas hechas</li>
-            <li><a href=""/>Crear tarea</li>
-            <li><a href=""/>Reordenar tareas</li>
+            <li><a href="#">Mis tareas por hacer</a></li>
+            <li><a href="#">Mis tareas hechas</a></li>
+            <li><a href="#">Crear tarea</a></li>
+            <li><a href="#" onclick="showTaskCreator(); return false;">Reordenar tareas</a></li>
           </ul>
+          <div id="generarTasca">
+            <form id="formulariTasques">
+              <label><b>Nueva tarea ---></b> || Nombre:</label>
+              <input type="text" id="tareaNombre" required>
+              <label> || Fecha:</label>
+              <input type="date" id="tareaDate" required>
+              <label> || Hora:</label>
+              <input type="time" id="tareaTime" required>
+              <input type="button" onclick="addTask()" value="Envia">
+            </form>
+            <br>
+          </div>
         </nav>
       </div>
     </header>
 
     <nav class="bluebg">
-        <div class="contenedor">
-            <div class="items">
-                <input class="vertical-center" type="image" src="./img/botones/sincheck.png" name="completado" alt="Marcar como completado" height="45" width="45">
-            </div>
-            <div class="items">
-                <p class="textitem">Títol recordatori</p>
-                <h1 class="textitem">05 de Maig del 2022 a les 21:50</h1>
-            </div>
-        </div>
     </nav>
 </body>
 </html>
