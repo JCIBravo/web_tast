@@ -25,3 +25,13 @@ a {
 body {
   background-color: #39537A;
 }
+
+.container {
+
+}
+.draggable{
+  cursor: move;
+}
+.draggable.dragging{
+  opacity:  .5;
+}
