@@ -2,7 +2,7 @@
 image: node:alpine
 pages:
   script:
-    - mkdir -p.public
+    - mkdir -p .public
     - cp -r ./* .public
     - rm -rf public
     - mv .public public
