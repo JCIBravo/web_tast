@@ -74,7 +74,6 @@ function addTask(){
   navToAppend.appendChild(br1)
 }
 
-
 function toCheck(id, imageElement){
       var taskID = document.getElementById(id)
       var inputText1 = taskID.getElementsByClassName("textitem")[0].innerHTML;
