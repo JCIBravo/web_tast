@@ -46,11 +46,11 @@ function addTask(){
   input1.className = "vertical-center"
   input1.type = "image"
   input1.src = "./img/botones/sincheck.png"
-  input1.name = "completado"
+  input1.name = "sincheck"
   input1.alt = "Marcar como completado"
   input1.height = "45"
   input1.width = "45"
-  input1.setAttribute("onclick","toCheck(this.parentElement.parentElement.id)")
+  input1.setAttribute("onclick","toCheck(this.parentElement.parentElement.id, this)")
   div1.appendChild(input1)
   divPrincipal.appendChild(div1)
 
@@ -75,11 +75,20 @@ function addTask(){
 }
 
 
-function toCheck(id){
+function toCheck(id, imageElement){
       var taskID = document.getElementById(id)
       var inputText1 = taskID.getElementsByClassName("textitem")[0].innerHTML;
       var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
       console.log(inputText1)
       console.log(inputText2)
+
+      if(imageElement.name == "sincheck"){
+        imageElement.src = "../Web/img/botones/completado.png";
+        imageElement.name = "check"
+      }
+      else{
+        imageElement.src = "../Web/img/botones/sincheck.png"
+        imageElement.name = "sincheck"
+      }
 
 }
