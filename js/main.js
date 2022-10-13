@@ -50,6 +50,7 @@ function addTask(){
   div1.appendChild(input1)
   divPrincipal.appendChild(div1)
 
+
   var div2 = document.createElement("div")
   div2.className = "items"
 
@@ -60,6 +61,15 @@ function addTask(){
   var h11 = document.createElement("h1")
   h11.className = "textitem"
   h11.textContent = document.getElementById("tareaDate").value + " a las " + document.getElementById("tareaTime").value
+
+  var inputEliminar = div2.appendChild(document.createElement("input"))
+
+  inputEliminar.className = "eliminar"
+  inputEliminar.type = "image"
+  inputEliminar.height = "45"
+  inputEliminar.width = "45"
+  inputEliminar.src = "./img/botones/eliminar.png"
+
 
   div2.appendChild(p1)
   div2.appendChild(h11)

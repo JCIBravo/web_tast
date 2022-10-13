@@ -26,6 +26,36 @@ body {
   background-color: #39537A;
 }
 
+.eliminar{
+  /*display: block;*/
+  /*clear: right;*/
+  /*margin: 0 auto;*/
+  /*position: absolute;*/
+  /*top: 50%;*/
+  /*-ms-transform: translateY(-50%);*/
+  /*transform: translateY(-50%);*/
+}
+
+.container {
+
+}
+.draggable{
+  cursor: move;
+}
+.draggable.dragging{
+  opacity:  .5;
+}
+
+.container {
+
+}
+.draggable{
+  cursor: move;
+}
+.draggable.dragging{
+  opacity:  .5;
+}
+
 .container {
 
 }
