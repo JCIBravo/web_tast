@@ -65,6 +65,13 @@ function addTask(){
   h11.className = "textitem"
   h11.textContent = document.getElementById("tareaDate").value + " a las " + document.getElementById("tareaTime").value
 
+  var inputEliminar = div2.appendChild(document.createElement("input"))
+  inputEliminar.className = "eliminar"
+  inputEliminar.type = "image"
+  inputEliminar.src = "./img/botones/eliminar.png"
+  inputEliminar.height = "45"
+  inputEliminar.width = "45"
+
   div2.appendChild(p1)
   div2.appendChild(h11)
   divPrincipal.appendChild(div2)
