@@ -1,4 +1,36 @@
-var taskID = 0
+function createCookie(name, value, days) {
+  var expires;
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toGMTString();
+  }
+  else {
+    expires = "";
+  }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(c_name) {
+  if (document.cookie.length > 0) {
+    c_start = document.cookie.indexOf(c_name + "=");
+    if (c_start != -1) {
+      c_start = c_start + c_name.length + 1;
+      c_end = document.cookie.indexOf(";", c_start);
+      if (c_end == -1) {
+        c_end = document.cookie.length;
+      }
+      return unescape(document.cookie.substring(c_start, c_end));
+    }
+  }
+  return "";
+}
+
+function delete_cookie(c_name) {
+  document.cookie = c_name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
+}
+
+var taskID = null
 const tasksMade = []
 
 class Task {
@@ -9,6 +41,25 @@ class Task {
     this.taskTime = taskTime;
   }
 }
+
+//execute this after page loads
+document.addEventListener('DOMContentLoaded', function() {
+  //load taskID
+  if ((getCookie("exportedTaskID")) == "") {
+    taskID = 0
+  } else {
+    taskID = parseInt(getCookie("exportedTaskID"))
+  }
+
+  //load taskList
+  if ((getCookie("exportedTaskList")) != "") {
+    const unparsedJSONArray = JSON.parse(getCookie("exportedTaskList"))
+    for (let i = 0; i < unparsedJSONArray.length; i++) {
+      tasksMade.push(new Task(unparsedJSONArray[i].taskID, unparsedJSONArray[i].taskName, unparsedJSONArray[i].taskDate, unparsedJSONArray[i].taskTime))
+      putTask(unparsedJSONArray[i].taskName, unparsedJSONArray[i].taskDate, unparsedJSONArray[i].taskTime)
+    }
+  }
+}, false);
 
 //program
 function showTaskCreator(){
@@ -77,8 +128,21 @@ function putTask(taskName, taskDate, taskTime){
 
   navToAppend.appendChild(br1);
 
-  //export a cookie
   tasksMade.push(new Task(taskID, taskName, taskDate, taskTime));
-  document.cookie = "tasksMade=" + tasksMade;
-  document.cookie = "lastTaskID=" + taskID;
+}
+
+function saveDataToCookie(){
+  createCookie("exportedTaskList", JSON.stringify(tasksMade), null);
+  createCookie("exportedTaskID", taskID, null);
+  alert("Datos guardados.");
+}
+
+function deleteData(){
+  if (confirm("Vas a eliminar todos los datos. Después de la eliminación la pagina se recargará. ¿Estás seguro?")) {
+    delete_cookie("tasksMade");
+    delete_cookie("taskID");
+    close();
+  } else {
+    alert("Operación cancelada.");
+  }
 }
