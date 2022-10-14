@@ -7,6 +7,11 @@
     font-display: swap;
 }
 
+#div1{
+  border: solid red .1rem;
+  height: 5rem;
+}
+
 nav{
     font-family: Inter, sans-serif;
     margin: 3%;
@@ -26,6 +31,7 @@ nav{
     align-content: center;
     height: 100px;
     text-align: center;
+  margin-bottom: 1rem;
 }
 
 .items:nth-child(1) {

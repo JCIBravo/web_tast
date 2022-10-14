@@ -1,3 +1,5 @@
+var listTasks = []
+
 function main() {
   alert("Cuadro de diálogo")
 }
@@ -24,6 +26,20 @@ function setTodayValue(){
   document.getElementById("tareaDate").value = today;
 }
 
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+/*function drag(ev) {
+  ev.dataTransfer.setData("text/plain", ev.target.id);
+}*/
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
+
 
 
 function addTask(){
@@ -35,6 +51,22 @@ function addTask(){
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
   divPrincipal.id = "tasca" + taskID;
+  divPrincipal.setAttribute("draggable", true)
+  divPrincipal.addEventListener("dragstart", (ev) =>
+    ev.dataTransfer.setData("text/plain", ev.target.id)
+  );
+  divPrincipal.addEventListener("dragover", (ev) => {
+    //console.log("dragOver");
+    ev.preventDefault();
+  });
+  divPrincipal.addEventListener("drop", (ev) => {
+    //console.log("dragOver");
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("text");
+    const source = document.getElementById(data);
+    //TODO agregar la acción que quiero hacer cuando suelte
+    alert("Dropped")
+  });
   navToAppend.appendChild(divPrincipal);
 
   var div1 = document.createElement("div");
@@ -69,9 +101,9 @@ function addTask(){
   div2.appendChild(h11)
   divPrincipal.appendChild(div2)
 
-  var br1 = document.createElement("br")
+  listTasks += divPrincipal
 
-  navToAppend.appendChild(br1)
+
 }
 
 function toCheck(id, imageElement){
