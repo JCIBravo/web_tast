@@ -57,21 +57,27 @@ function addTask(){
   var div2 = document.createElement("div")
   div2.className = "items"
 
-  var p1 = document.createElement("p")
+  var p1 = document.createElement("h1")
   p1.className = "textitem"
   p1.textContent = document.getElementById("tareaNombre").value
 
-  var h11 = document.createElement("h1")
+  var h11 = document.createElement("p")
   h11.className = "textitem"
   h11.textContent = document.getElementById("tareaDate").value + " a las " + document.getElementById("tareaTime").value
+
+  var inputEliminar = div2.appendChild(document.createElement("input"))
+  inputEliminar.className = "eliminar"
+  inputEliminar.type = "image"
+  inputEliminar.src = "./img/botones/eliminar.png"
+  inputEliminar.height = "45"
+  inputEliminar.width = "45"
+  inputEliminar.setAttribute("onclick","remove(this.parentElement.parentElement)")
+
 
   div2.appendChild(p1)
   div2.appendChild(h11)
   divPrincipal.appendChild(div2)
 
-  var br1 = document.createElement("br")
-
-  navToAppend.appendChild(br1)
 }
 
 function toCheck(id, imageElement){
@@ -90,4 +96,9 @@ function toCheck(id, imageElement){
         imageElement.name = "sincheck"
       }
 
+}
+
+
+function remove(element){
+  element.remove()
 }
