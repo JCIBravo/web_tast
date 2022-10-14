@@ -26,6 +26,7 @@ nav{
     align-content: center;
     height: 100px;
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .items:nth-child(1) {
@@ -57,11 +58,8 @@ nav{
 }
 
 .eliminar{
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  float: right;
+  transform: translateY(50%);
 }
 
 #generarTasca{

@@ -71,14 +71,15 @@ function addTask(){
   inputEliminar.src = "./img/botones/eliminar.png"
   inputEliminar.height = "45"
   inputEliminar.width = "45"
+  inputEliminar.setAttribute("onclick","remove(this.parentElement.parentElement)")
 
   div2.appendChild(p1)
   div2.appendChild(h11)
   divPrincipal.appendChild(div2)
-
-  var br1 = document.createElement("br")
-
-  navToAppend.appendChild(br1)
+//
+//  var br1 = document.createElement("br")
+//
+//  navToAppend.appendChild(br1)
 }
 
 
@@ -88,5 +89,8 @@ function toCheck(id){
       var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
       console.log(inputText1)
       console.log(inputText2)
+}
 
+function remove(element){
+  element.remove()
 }
