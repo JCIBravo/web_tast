@@ -26,22 +26,6 @@ function setTodayValue(){
   document.getElementById("tareaDate").value = today;
 }
 
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-/*function drag(ev) {
-  ev.dataTransfer.setData("text/plain", ev.target.id);
-}*/
-
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  ev.target.appendChild(document.getElementById(data));
-}
-
-
-
 function addTask(){
   date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
 
@@ -52,22 +36,6 @@ function addTask(){
   divPrincipal.className = "contenedor";
   divPrincipal.id = "tasca" + taskID;
   divPrincipal.setAttribute("draggable", true)
-  divPrincipal.addEventListener("dragstart", (ev) =>
-    ev.dataTransfer.setData("text/plain", ev.target.id)
-  );
-  divPrincipal.addEventListener("dragover", (ev) => {
-    //console.log("dragOver");
-    ev.preventDefault();
-  });
-  divPrincipal.addEventListener("drop", (ev) => {
-    //console.log("dragOver");
-    ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    const source = document.getElementById(data);
-    //TODO agregar la acción que quiero hacer cuando suelte
-    alert("Dropped")
-  });
-  navToAppend.appendChild(divPrincipal);
 
   var div1 = document.createElement("div");
   div1.className = "items";
@@ -101,9 +69,65 @@ function addTask(){
   div2.appendChild(h11)
   divPrincipal.appendChild(div2)
 
-  listTasks += divPrincipal
+  addNewTaskToList(divPrincipal)
+  navToAppend.appendChild(divPrincipal);
+}
 
+function addNewTaskToList(divHtmlElement) {
+  listTasks.push(divHtmlElement)
+  addListenersToHtmlElement(divHtmlElement)
+}
 
+function addListenersToHtmlElement(divHtmlElement) {
+  divHtmlElement.addEventListener("dragstart", (ev) => {
+    console.log("dragStart: " + ev.target.id);
+    ev.dataTransfer.setData("text/plain", ev.target.id)
+  });
+  divHtmlElement.addEventListener("dragover", (ev) => {
+    ev.preventDefault();
+    console.log("dragOver: " + ev.target.id);
+  });
+  divHtmlElement.addEventListener("drop", (ev) => {
+    ev.preventDefault();
+    console.log("evento: " + ev) //es el tipo de evento que se realizó, ejemplo:  drag event
+    console.log("elemento que recibo otro: " + divHtmlElement.id) //ejemplo: tasca2
+    const data = ev.dataTransfer.getData("text");
+    const source = document.getElementById(data);
+    //alert("Dropped")
+    //console.log("data: " + data) //ejemplo: tasca1
+    //console.log(source) //elemento html que se quiere trasladar. ejemplo: el div con id tasca1
+    orderList(data, divHtmlElement.id) //limpiar el nav, y ordenarlo con nuevo orden
+  });
+}
+
+function orderList(idTransfer, idReceiver) {
+  let indexWherePut;
+  let indexToChange;
+  let elementToChange;
+  for (let i = 0; i < listTasks.length; i++) {
+    if (listTasks[i].id == idReceiver) indexWherePut = i
+    if (listTasks[i].id == idTransfer) {
+      indexToChange = i
+      elementToChange = listTasks[i]
+    }
+  }
+  //quitar el elementToChange de la listTasks
+  listTasks.splice(indexToChange,1)
+  //agregar el elemento en el indexWherePut
+  listTasks.splice(indexWherePut,0,elementToChange)
+  renderList()
+}
+
+function renderList() {
+  //TODO ver de tener el navToAppend en todo el programa
+  var navToAppend = document.getElementsByTagName("nav")[1];
+  //TODO mejorar el borrado de los hijos
+  while (navToAppend.firstChild){
+    navToAppend.removeChild(navToAppend.firstChild);
+  };
+  for (let i = 0; i < listTasks.length; i++){
+    navToAppend.appendChild(listTasks[i])
+  }
 }
 
 function toCheck(id, imageElement){
