@@ -1,3 +1,14 @@
+
+class Task {
+  constructor(taskID, taskName, taskDate, taskTime) {
+    this.taskID = taskID;
+    this.taskName = taskName;
+    this.taskDate = taskDate;
+    this.taskTime = taskTime;
+  }
+}
+
+
 function main() {
   alert("Cuadro de diálogo")
 }
@@ -13,6 +24,9 @@ function showTaskCreator(){
     divElement.style.display = "none";
     console.log("hiding");
   }
+
+  var contenedorDraggable = document.getElementsByClassName("contenedor")
+  contenedorDraggable.draggable = true
 }
 
 function setTodayValue(){
