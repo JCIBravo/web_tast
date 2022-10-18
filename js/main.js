@@ -6,7 +6,10 @@ function main() {
 
 var taskID = 0
 
+
+var checkDraggable = false
 function showTaskCreator(){
+
   var divElement = document.getElementById("generarTasca");
   if (divElement.style.display === "none") {
     divElement.style.display = "block";
@@ -15,6 +18,25 @@ function showTaskCreator(){
     divElement.style.display = "none";
     console.log("hiding");
   }
+  var contenedorDraggable = document.getElementsByClassName("contenedor")
+
+
+
+  if (!checkDraggable) {
+    for (let i = 0; i < contenedorDraggable.length; i++) {
+      contenedorDraggable[i].draggable = true
+    }
+
+    checkDraggable = true
+  }
+
+  else{
+    for (let i = 0; i < contenedorDraggable.length; i++) {
+      contenedorDraggable[i].draggable = false
+    }
+    checkDraggable = false
+  }
+
 }
 
 function setTodayValue(){
@@ -35,7 +57,7 @@ function addTask(){
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
   divPrincipal.id = "tasca" + taskID;
-  divPrincipal.setAttribute("draggable", true)
+  divPrincipal.setAttribute("draggable", false)
 
   var div1 = document.createElement("div");
   div1.className = "items";
