@@ -1,4 +1,3 @@
-
 class Task {
   constructor(taskID, taskName, taskDate, taskTime) {
     this.taskID = taskID;
@@ -8,6 +7,7 @@ class Task {
   }
 }
 
+var listTasks = []
 
 function main() {
   alert("Cuadro de diálogo")
@@ -28,7 +28,6 @@ function showTaskCreator(){
   }
 
   var contenedorDraggable = document.getElementsByClassName("contenedor")
-
 
 
   if (!checkDraggable) {
@@ -214,6 +213,11 @@ function toCheck(id, imageElement){
 
 
 function remove(element){
+  for (let i = 0; i < listTasks.length; i++){
+    if (listTasks[i].id === element.id){
+      listTasks[i].pop()
+    }
+  }
   element.remove()
 }
 
