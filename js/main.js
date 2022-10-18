@@ -1,16 +1,9 @@
-var taskID = 0
-const tasksMade = []
-
-class Task {
-  constructor(taskID, taskName, taskDate, taskTime) {
-    this.taskID = taskID;
-    this.taskName = taskName;
-    this.taskDate = taskDate;
-    this.taskTime = taskTime;
-  }
+function main() {
+  alert("Cuadro de diálogo")
 }
 
-//program
+var taskID = 0
+
 function showTaskCreator(){
   var divElement = document.getElementById("generarTasca");
   if (divElement.style.display === "none") {
@@ -31,11 +24,11 @@ function setTodayValue(){
   document.getElementById("tareaDate").value = today;
 }
 
-function sendDataToPutTask(){
-  putTask(document.getElementById("tareaNombre").value, document.getElementById("tareaDate").value, document.getElementById("tareaTime").value)
-}
 
-function putTask(taskName, taskDate, taskTime){
+
+function addTask(){
+  date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
+
   var navToAppend = document.getElementsByTagName("nav")[1];
   taskID++;
 
@@ -47,38 +40,65 @@ function putTask(taskName, taskDate, taskTime){
   var div1 = document.createElement("div");
   div1.className = "items";
 
-  var input1 = document.createElement("input");
-  input1.className = "vertical-center";
-  input1.type = "image";
-  input1.src = "./img/botones/sincheck.png";
-  input1.name = "completado";
-  input1.alt = "Marcar como completado";
-  input1.height = "45";
-  input1.width = "45";
-  div1.appendChild(input1);
-  divPrincipal.appendChild(div1);
+  var askTask = document.getElementById(divPrincipal)
 
-  var div2 = document.createElement("div");
-  div2.className = "items";
+  var input1 = document.createElement("input")
+  input1.className = "vertical-center"
+  input1.type = "image"
+  input1.src = "./img/botones/sincheck.png"
+  input1.name = "sincheck"
+  input1.alt = "Marcar como completado"
+  input1.height = "45"
+  input1.width = "45"
+  input1.setAttribute("onclick","toCheck(this.parentElement.parentElement.id, this)")
+  div1.appendChild(input1)
+  divPrincipal.appendChild(div1)
 
-  var p1 = document.createElement("p");
-  p1.className = "textitem";
-  p1.textContent = taskName;
+  var div2 = document.createElement("div")
+  div2.className = "items"
 
-  var h11 = document.createElement("h1");
-  h11.className = "textitem";
-  h11.textContent = taskDate + " a las " + taskTime;
+  var p1 = document.createElement("h1")
+  p1.className = "textitem"
+  p1.textContent = document.getElementById("tareaNombre").value
 
-  div2.appendChild(p1);
-  div2.appendChild(h11);
-  divPrincipal.appendChild(div2);
+  var h11 = document.createElement("p")
+  h11.className = "textitem"
+  h11.textContent = document.getElementById("tareaDate").value + " a las " + document.getElementById("tareaTime").value
 
-  var br1 = document.createElement("br");
+  var inputEliminar = div2.appendChild(document.createElement("input"))
+  inputEliminar.className = "eliminar"
+  inputEliminar.type = "image"
+  inputEliminar.src = "./img/botones/eliminar.png"
+  inputEliminar.height = "45"
+  inputEliminar.width = "45"
+  inputEliminar.setAttribute("onclick","remove(this.parentElement.parentElement)")
 
-  navToAppend.appendChild(br1);
 
-  //export a cookie
-  tasksMade.push(new Task(taskID, taskName, taskDate, taskTime));
-  document.cookie = "tasksMade=" + tasksMade;
-  document.cookie = "lastTaskID=" + taskID;
+  div2.appendChild(p1)
+  div2.appendChild(h11)
+  divPrincipal.appendChild(div2)
+
+}
+
+function toCheck(id, imageElement){
+      var taskID = document.getElementById(id)
+      var inputText1 = taskID.getElementsByClassName("textitem")[0].innerHTML;
+      var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
+      console.log(inputText1)
+      console.log(inputText2)
+
+      if(imageElement.name == "sincheck"){
+        imageElement.src = "../Web/img/botones/completado.png";
+        imageElement.name = "check"
+      }
+      else{
+        imageElement.src = "../Web/img/botones/sincheck.png"
+        imageElement.name = "sincheck"
+      }
+
+}
+
+
+function remove(element){
+  element.remove()
 }
