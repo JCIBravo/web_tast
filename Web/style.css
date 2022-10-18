@@ -7,6 +7,10 @@
     font-display: swap;
 }
 
+p{
+  font-size: 1.2em;
+}
+
 nav{
     font-family: Inter, sans-serif;
     margin: 3%;
@@ -26,6 +30,7 @@ nav{
     align-content: center;
     height: 100px;
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .items:nth-child(1) {
@@ -55,6 +60,13 @@ nav{
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
+
+
+.eliminar{
+  float: right;
+  transform: translateY(50%);
+}
+
 
 #generarTasca{
   text-align: center;
