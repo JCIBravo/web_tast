@@ -15,7 +15,6 @@ function main() {
 
 var taskID = 0
 
-
 var checkDraggable = false
 function showTaskCreator(){
   var divElement = document.getElementById("generarTasca");
@@ -71,7 +70,7 @@ function addTask(){
 
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
-  divPrincipal.id = "tasca" + taskID;
+  divPrincipal.id = `${taskID}`;
   divPrincipal.setAttribute("draggable", false)
 
   var div1 = document.createElement("div");
