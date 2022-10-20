@@ -116,6 +116,14 @@ function addTask(){
   inputEliminar.width = "45"
   inputEliminar.setAttribute("onclick", "remove(this.parentElement.parentElement)")
 
+  var inputEditar = div2.appendChild(document.createElement("input"))
+  inputEditar.className = "editar"
+  inputEditar.type = "image"
+  inputEditar.src = "./img/botones/editar.png"
+  inputEditar.height = "45"
+  inputEditar.width = "45"
+  inputEditar.setAttribute("onclick", "editar(this.parentElement.parentElement)")
+
 
   div2.appendChild(h1)
   div2.appendChild(p1)
@@ -268,4 +276,9 @@ function parseDate(date){
 
   //Formato: Día DD/MM/AAAA
   return "Día " + dia + "/" + mes + "/" + año
+}
+
+
+function editar(title,day,hour){
+
 }

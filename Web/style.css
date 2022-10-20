@@ -67,6 +67,10 @@ nav{
   transform: translateY(50%);
 }
 
+.editar{
+  float: right;
+  transform: translateY(50%);
+}
 
 #generarTasca{
   text-align: center;
