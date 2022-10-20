@@ -59,76 +59,74 @@ function setTodayValue(){
 
 
 function addTask(){
-  if (document.getElementById("tareaNombre").value == "" || document.getElementById("tareaDate").value == "" || document.getElementById("tareaTime").value == ""){
+  if (document.getElementById("tareaNombre").value == ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
-  } else {
-    date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
+    return null
+  }
 
-    var navToAppend = document.getElementsByTagName("nav")[1];
-    taskID++;
+  date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
 
-    var divPrincipal = document.createElement("div");
-    divPrincipal.className = "contenedor";
-    divPrincipal.id = "tasca" + taskID;
-    navToAppend.appendChild(divPrincipal);
+  var navToAppend = document.getElementsByTagName("nav")[1];
+  taskID++;
+
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
   divPrincipal.id = "tasca" + taskID;
   divPrincipal.setAttribute("draggable", false)
 
-    var div1 = document.createElement("div");
-    div1.className = "items";
+  var div1 = document.createElement("div");
+  div1.className = "items";
 
-    var askTask = document.getElementById(divPrincipal)
+  var askTask = document.getElementById(divPrincipal)
 
-    var input1 = document.createElement("input")
-    input1.className = "vertical-center"
-    input1.type = "image"
-    input1.src = "./img/botones/sincheck.png"
-    input1.name = "sincheck"
-    input1.alt = "Marcar como completado"
-    input1.height = "45"
-    input1.width = "45"
-    input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this)")
-    div1.appendChild(input1)
-    divPrincipal.appendChild(div1)
+  var input1 = document.createElement("input")
+  input1.className = "vertical-center"
+  input1.type = "image"
+  input1.src = "./img/botones/sincheck.png"
+  input1.name = "sincheck"
+  input1.alt = "Marcar como completado"
+  input1.height = "45"
+  input1.width = "45"
+  input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this)")
+  div1.appendChild(input1)
+  divPrincipal.appendChild(div1)
 
-    var div2 = document.createElement("div")
-    div2.className = "items"
+  var div2 = document.createElement("div")
+  div2.className = "items"
 
-    var h1 = document.createElement("h1")
-    h1.className = "textitem"
-    h1.textContent = document.getElementById("tareaNombre").value
+  var h1 = document.createElement("h1")
+  h1.className = "textitem"
+  h1.textContent = document.getElementById("tareaNombre").value
 
-    var p1 = document.createElement("p")
-    p1.className = "textitem"
-    p1.style.display = "block"
-    p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value
+  var p1 = document.createElement("p")
+  p1.className = "textitem"
+  p1.style.display = "block"
+  p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value
 
-    var p2 = document.createElement("p")
-    p2.className = "textitem"
-    p2.style.display = "none"
-    p2.textContent = "Tarea completada"
+  var p2 = document.createElement("p")
+  p2.className = "textitem"
+  p2.style.display = "none"
+  p2.textContent = "Tarea completada"
 
-    var inputEliminar = div2.appendChild(document.createElement("input"))
-    inputEliminar.className = "eliminar"
-    inputEliminar.type = "image"
-    inputEliminar.src = "./img/botones/eliminar.png"
-    inputEliminar.height = "45"
-    inputEliminar.width = "45"
-    inputEliminar.setAttribute("onclick", "remove(this.parentElement.parentElement)")
-
-
-    div2.appendChild(h1)
-    div2.appendChild(p1)
-    div2.appendChild(p2)
-    divPrincipal.appendChild(div2)
+  var inputEliminar = div2.appendChild(document.createElement("input"))
+  inputEliminar.className = "eliminar"
+  inputEliminar.type = "image"
+  inputEliminar.src = "./img/botones/eliminar.png"
+  inputEliminar.height = "45"
+  inputEliminar.width = "45"
+  inputEliminar.setAttribute("onclick", "remove(this.parentElement.parentElement)")
 
 
-    document.getElementById("tareaNombre").value = null
-    document.getElementById("tareaDate").value = null
-    document.getElementById("tareaTime").value = null
-  }
+  div2.appendChild(h1)
+  div2.appendChild(p1)
+  div2.appendChild(p2)
+  divPrincipal.appendChild(div2)
+
+
+  document.getElementById("tareaNombre").value = null
+  document.getElementById("tareaDate").value = null
+  document.getElementById("tareaTime").value = null
+
   addNewTaskToList(divPrincipal)
   navToAppend.appendChild(divPrincipal);
 }
@@ -215,7 +213,7 @@ function toCheck(id, imageElement){
 function remove(element){
   for (let i = 0; i < listTasks.length; i++){
     if (listTasks[i].id === element.id){
-      listTasks[i].pop()
+      listTasks.splice(i,1)
     }
   }
   element.remove()
