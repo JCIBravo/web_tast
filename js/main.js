@@ -122,7 +122,7 @@ function addTask(){
   inputEditar.src = "./img/botones/editar.png"
   inputEditar.height = "45"
   inputEditar.width = "45"
-  inputEditar.setAttribute("onclick", "editar(this.parentElement.parentElement)")
+  inputEditar.setAttribute("onclick", "editar(this.parentElement,this.parentElement.parentElement)")
 
 
   div2.appendChild(h1)
@@ -279,6 +279,34 @@ function parseDate(date){
 }
 
 
-function editar(title,day,hour){
+function editar(item, contenedor){
+  var items1 = contenedor.getElementsByClassName("items")[0]
+  var itscheck = items1.getElementsByTagName("input")[0]
 
+  if (itscheck.name==="sincheck"){
+    var textitem1 = item.getElementsByClassName("textitem")[0]
+    var textitem2 = item.getElementsByClassName("textitem")[1]
+
+    console.log(textitem1)
+
+    if (textitem1.tagName = "h1"){
+      var sdf = textitem1.innerHTML = "<input>"
+      console.log(sdf)
+    }
+    else {
+      textitem1.innerHTML = "<h1>"
+    }
+
+
+
+          // if (textitem1.find('input').length){
+          //   textitem1.text(textitem1.find('input').value());
+          // }
+          // else {
+          //   var t = textitem1.text();
+          //   textitem1.html(textitem1('<input />',{'value' : t}).value(t));
+          // }
+
+
+  }
 }
