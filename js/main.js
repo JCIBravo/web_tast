@@ -290,7 +290,7 @@ function editar(item, contenedor){
     console.log(textitem1)
 
     if (textitem1.tagName = "h1"){
-      var sdf = textitem1.innerHTML = "<input>"
+      var sdf = textitem1.innerHTML = "<input id='editarNom'>"
       console.log(sdf)
     }
     else {
