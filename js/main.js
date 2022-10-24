@@ -284,29 +284,17 @@ function editar(item, contenedor){
   var itscheck = items1.getElementsByTagName("input")[0]
 
   if (itscheck.name==="sincheck"){
-    var textitem1 = item.getElementsByClassName("textitem")[0]
-    var textitem2 = item.getElementsByClassName("textitem")[1]
+    var titolTasca = item.getElementsByClassName("textitem")[0] //nom
+    var dataTasca = item.getElementsByClassName("textitem")[1] //data
 
-    console.log(textitem1)
-
-    if (textitem1.tagName = "h1"){
-      var sdf = textitem1.innerHTML = "<input id='editarNom'>"
-      console.log(sdf)
+    var input = ""
+    if (titolTasca.getElementsByTagName("input")[0]?.tagName == null){
+      input = titolTasca.textContent
+      titolTasca.innerHTML = "<input id='editarNom' value='"+input+"'>"
+    } else {
+      input = "<h1 className=\"textitem\">" + document.getElementById('editarNom').value + "</h1>"
+      console.log(input)
+      titolTasca.innerHTML = input
     }
-    else {
-      textitem1.innerHTML = "<h1>"
-    }
-
-
-
-          // if (textitem1.find('input').length){
-          //   textitem1.text(textitem1.find('input').value());
-          // }
-          // else {
-          //   var t = textitem1.text();
-          //   textitem1.html(textitem1('<input />',{'value' : t}).value(t));
-          // }
-
-
   }
 }
