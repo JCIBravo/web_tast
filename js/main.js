@@ -58,6 +58,10 @@ function setTodayValue(){
 
 
 function addTask(){
+  console.log("Nombre:" + document.getElementById("tareaNombre").value)
+  console.log("Fecha:" + document.getElementById("tareaDate").value)
+  console.log("Hora:" + document.getElementById("tareaTime").value)
+
   if (document.getElementById("tareaNombre").value == ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
     return null
@@ -100,7 +104,15 @@ function addTask(){
   var p1 = document.createElement("p")
   p1.className = "textitem"
   p1.style.display = "block"
-  p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value
+  if (document.getElementById("tareaDate").value != "" && document.getElementById("tareaTime").value != "") {
+    p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value + "h"
+  } else if (document.getElementById("tareaDate").value == "" && document.getElementById("tareaTime").value == "") {
+    p1.textContent = "Lo más pronto posible"
+  } else if (document.getElementById("tareaTime").value == "") {
+    p1.textContent = "Antes del " + parseDate(document.getElementById("tareaDate").value).toLowerCase()
+  } else if (document.getElementById("tareaDate").value == "") {
+    p1.textContent = "A las " + document.getElementById("tareaTime").value + "h"
+  }
 
   var p2 = document.createElement("p")
   p2.className = "textitem"
@@ -114,6 +126,14 @@ function addTask(){
   inputEliminar.height = "45"
   inputEliminar.width = "45"
   inputEliminar.setAttribute("onclick", "remove(this.parentElement.parentElement)")
+
+  var inputEditar = div2.appendChild(document.createElement("input"))
+  inputEditar.className = "editar"
+  inputEditar.type = "image"
+  inputEditar.src = "./img/botones/editar.png"
+  inputEditar.height = "45"
+  inputEditar.width = "45"
+  inputEditar.setAttribute("onclick", "editar(this.parentElement,this.parentElement.parentElement)")
 
 
   div2.appendChild(h1)
@@ -181,7 +201,7 @@ function renderList() {
   //TODO mejorar el borrado de los hijos
   while (navToAppend.firstChild){
     navToAppend.removeChild(navToAppend.firstChild);
-  };
+  }
   for (let i = 0; i < listTasks.length; i++){
     navToAppend.appendChild(listTasks[i])
   }
@@ -219,52 +239,81 @@ function remove(element){
 }
 
 function parseDate(date){
-  var fecha = date.split("-")
-  var dia = fecha[2]
-  var mes = fecha[1]
-  var año = fecha[0]
+  if (date == "") return ""
+  else {
+    var fecha = date.split("-")
+    var dia = fecha[2]
+    var mes = fecha[1]
+    var año = fecha[0]
 
-  //Formato: Día DD de MMMMMMMMM del AAAA
-  //switch (mes) {
-  //  case "01":
-  //    mes = "enero";
-  //    break
-  //  case "02":
-  //    mes = "febrero"
-  //    break
-  //  case "03":
-  //    mes = "marzo"
-  //    break
-  //  case "04":
-  //    mes = "abril"
-  //    break
-  //  case "05":
-  //    mes = "mayo"
-  //    break
-  //  case "06":
-  //    mes = "junio"
-  //    break
-  //  case "07":
-  //    mes = "julio"
-  //    break
-  //  case "08":
-  //    mes = "agosto"
-  //    break
-  //  case "09":
-  //    mes = "septiembre"
-  //    break
-  //  case "10":
-  //    mes = "octubre"
-  //    break
-  //  case "11":
-  //    mes = "noviembre"
-  //    break
-  //  case "12":
-  //    mes = "diciembre"
-  //    break
-  //}
-  //return "Día " + dia + " de " + mes + " del " + año
+    //Formato: Día DD de MMMMMMMMM del AAAA
+    //switch (mes) {
+    //  case "01":
+    //    mes = "enero";
+    //    break
+    //  case "02":
+    //    mes = "febrero"
+    //    break
+    //  case "03":
+    //    mes = "marzo"
+    //    break
+    //  case "04":
+    //    mes = "abril"
+    //    break
+    //  case "05":
+    //    mes = "mayo"
+    //    break
+    //  case "06":
+    //    mes = "junio"
+    //    break
+    //  case "07":
+    //    mes = "julio"
+    //    break
+    //  case "08":
+    //    mes = "agosto"
+    //    break
+    //  case "09":
+    //    mes = "septiembre"
+    //    break
+    //  case "10":
+    //    mes = "octubre"
+    //    break
+    //  case "11":
+    //    mes = "noviembre"
+    //    break
+    //  case "12":
+    //    mes = "diciembre"
+    //    break
+    //}
+    //return "Día " + dia + " de " + mes + " del " + año
 
-  //Formato: Día DD/MM/AAAA
-  return "Día " + dia + "/" + mes + "/" + año
+    //Formato: Día DD/MM/AAAA
+    return "Día " + dia + "/" + mes + "/" + año
+  }
+}
+
+var edit = true
+function editar(item, contenedor){
+  var items1 = contenedor.getElementsByClassName("items")[0]
+  var itscheck = items1.getElementsByTagName("input")[0]
+
+  if (itscheck.name == "sincheck"){
+    var input = ""
+
+    var it = 0
+    for (const element of item.getElementsByClassName("textitem")){
+      console.log("[" + it + "]: " + element.outerHTML)
+      it++
+    }
+
+    if (edit){
+      input = item.getElementsByClassName("textitem")[0].textContent
+      item.getElementsByClassName("textitem")[0].innerHTML = "<input id='editarNom' value='"+input+"'>"
+      edit = false
+    } else {
+      input = "<h1 class=\"textitem\">" + document.getElementById('editarNom').value + "</h1>"
+      item.getElementsByClassName("textitem")[0].outerHTML = input
+      edit = true
+    }
+  }
 }
