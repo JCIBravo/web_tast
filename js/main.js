@@ -247,53 +247,11 @@ function parseDate(date){
     var mes = fecha[1]
     var año = fecha[0]
 
-    //Formato: Día DD de MMMMMMMMM del AAAA
-    //switch (mes) {
-    //  case "01":
-    //    mes = "enero";
-    //    break
-    //  case "02":
-    //    mes = "febrero"
-    //    break
-    //  case "03":
-    //    mes = "marzo"
-    //    break
-    //  case "04":
-    //    mes = "abril"
-    //    break
-    //  case "05":
-    //    mes = "mayo"
-    //    break
-    //  case "06":
-    //    mes = "junio"
-    //    break
-    //  case "07":
-    //    mes = "julio"
-    //    break
-    //  case "08":
-    //    mes = "agosto"
-    //    break
-    //  case "09":
-    //    mes = "septiembre"
-    //    break
-    //  case "10":
-    //    mes = "octubre"
-    //    break
-    //  case "11":
-    //    mes = "noviembre"
-    //    break
-    //  case "12":
-    //    mes = "diciembre"
-    //    break
-    //}
-    //return "Día " + dia + " de " + mes + " del " + año
-
-    //Formato: Día DD/MM/AAAA
-    return "Día " + dia + "/" + mes + "/" + año
-  }
+    return "Día " + dia + "/" + mes + "/" + año}
 }
 
 var edit = true
+
 function editar(item, contenedor){
   var items1 = contenedor.getElementsByClassName("items")[0]
   var itscheck = items1.getElementsByTagName("input")[0]
@@ -317,4 +275,25 @@ function editar(item, contenedor){
       edit = true
     }
   }
+
+}
+
+function addSaveTask() {
+  fetch('http://0.0.0.0:8080/add',
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({id: 3, firstName: "Jet", lastName: "Brains"})
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log('Success:', data);
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
