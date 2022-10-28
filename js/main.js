@@ -9,9 +9,6 @@ class Task {
 
 var listTasks = []
 
-function main() {
-  alert("Cuadro de diálogo")
-}
 
 var taskID = 0
 
@@ -76,7 +73,7 @@ function addTask(){
   var div1 = document.createElement("div");
   div1.className = "items";
 
-  var askTask = document.getElementById(divPrincipal)
+  // var askTask = document.getElementById(divPrincipal)
 
   var input1 = document.createElement("input")
   input1.className = "vertical-center"
@@ -127,7 +124,10 @@ function addTask(){
   document.getElementById("tareaTime").value = null
 
   addNewTaskToList(divPrincipal)
-  navToAppend.appendChild(divPrincipal);
+  navToAppend.appendChild(divPrincipal)
+
+//(val id: String, var title: String, var date: String, var hour: String, var checked: Boolean)
+  addTaskToKtor(`${taskID}`, h1.textContent, p1.textContent, false)
 }
 
 function addNewTaskToList(divHtmlElement) {
@@ -224,47 +224,26 @@ function parseDate(date){
   var mes = fecha[1]
   var año = fecha[0]
 
-  //Formato: Día DD de MMMMMMMMM del AAAA
-  //switch (mes) {
-  //  case "01":
-  //    mes = "enero";
-  //    break
-  //  case "02":
-  //    mes = "febrero"
-  //    break
-  //  case "03":
-  //    mes = "marzo"
-  //    break
-  //  case "04":
-  //    mes = "abril"
-  //    break
-  //  case "05":
-  //    mes = "mayo"
-  //    break
-  //  case "06":
-  //    mes = "junio"
-  //    break
-  //  case "07":
-  //    mes = "julio"
-  //    break
-  //  case "08":
-  //    mes = "agosto"
-  //    break
-  //  case "09":
-  //    mes = "septiembre"
-  //    break
-  //  case "10":
-  //    mes = "octubre"
-  //    break
-  //  case "11":
-  //    mes = "noviembre"
-  //    break
-  //  case "12":
-  //    mes = "diciembre"
-  //    break
-  //}
-  //return "Día " + dia + " de " + mes + " del " + año
-
-  //Formato: Día DD/MM/AAAA
   return "Día " + dia + "/" + mes + "/" + año
+}
+
+const URL_ADD= "http://0.0.0.0:8080/todoitems/add"
+
+function addTaskToKtor(id, title, date, checked) {
+  console.log(id,title,date,checked)
+  fetch(URL_ADD,
+    {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        title: title,
+        date: date,
+        checked: checked
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
 }
