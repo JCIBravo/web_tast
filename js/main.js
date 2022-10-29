@@ -9,7 +9,6 @@ class Task {
 
 var listTasks = []
 
-
 var taskID = 0
 
 var checkDraggable = false
@@ -51,8 +50,6 @@ function setTodayValue(){
   today = yyyy + '-' + mm + '-' + dd;
   document.getElementById("tareaDate").value = today;
 }
-
-
 
 function addTask(){
   if (document.getElementById("tareaNombre").value == ""){
@@ -207,7 +204,6 @@ function toCheck(id, imageElement){
       }
 
 }
-
 
 function remove(element){
   for (let i = 0; i < listTasks.length; i++){
