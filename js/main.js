@@ -15,6 +15,9 @@ function main() {
 
 var taskID = 0
 
+const URL_LASTID= "http://0.0.0.0:8080/todoitems/lastID"
+fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json()))
+
 
 var checkDraggable = false
 function showTaskCreator(){
@@ -364,23 +367,6 @@ function updateTaskToKtor(id, title, date, checked) {
         title: title,
         date: date,
         checked: checked
-      })
-    })
-    .then(response => console.log(response))
-    .then(err => console.log(err))
-}
-
-const URL_LASTID= "http://0.0.0.0:8080/todoitems/lastID"
-
-function lastIDTaskToKtor() {
-  fetch(URL_LASTID,
-    {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-
       })
     })
     .then(response => console.log(response))
