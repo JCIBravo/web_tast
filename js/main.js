@@ -212,6 +212,7 @@ function remove(element){
     }
   }
   element.remove()
+  deleteTaskToKtor(element.id)
 }
 
 function parseDate(date){
@@ -238,6 +239,23 @@ function addTaskToKtor(id, title, date, checked) {
         title: title,
         date: date,
         checked: checked
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
+const URL_DELETE= "http://0.0.0.0:8080/delete/"
+
+function deleteTaskToKtor(id) {
+  fetch(URL_DELETE+id,
+    {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id
       })
     })
     .then(response => console.log(response))
