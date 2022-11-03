@@ -21,10 +21,10 @@ function showTaskCreator(){
   var divElement = document.getElementById("generarTasca");
   if (divElement.style.display === "none") {
     divElement.style.display = "block";
-    console.log("showing");
+    // console.log("showing");
   } else {
     divElement.style.display = "none";
-    console.log("hiding");
+    // console.log("hiding");
   }
 
   var contenedorDraggable = document.getElementsByClassName("contenedor")
@@ -59,9 +59,9 @@ function setTodayValue(){
 
 
 function addTask(){
-  console.log("Nombre:" + document.getElementById("tareaNombre").value)
-  console.log("Fecha:" + document.getElementById("tareaDate").value)
-  console.log("Hora:" + document.getElementById("tareaTime").value)
+  // console.log("Nombre:" + document.getElementById("tareaNombre").value)
+  // console.log("Fecha:" + document.getElementById("tareaDate").value)
+  // console.log("Hora:" + document.getElementById("tareaTime").value)
 
   if (document.getElementById("tareaNombre").value == ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
@@ -161,17 +161,17 @@ function addNewTaskToList(divHtmlElement) {
 
 function addListenersToHtmlElement(divHtmlElement) {
   divHtmlElement.addEventListener("dragstart", (ev) => {
-    console.log("dragStart: " + ev.target.id);
+    // console.log("dragStart: " + ev.target.id);
     ev.dataTransfer.setData("text/plain", ev.target.id)
   });
   divHtmlElement.addEventListener("dragover", (ev) => {
     ev.preventDefault();
-    console.log("dragOver: " + ev.target.id);
+    // console.log("dragOver: " + ev.target.id);
   });
   divHtmlElement.addEventListener("drop", (ev) => {
     ev.preventDefault();
-    console.log("evento: " + ev) //es el tipo de evento que se realizó, ejemplo:  drag event
-    console.log("elemento que recibo otro: " + divHtmlElement.id) //ejemplo: tasca2
+    // console.log("evento: " + ev) //es el tipo de evento que se realizó, ejemplo:  drag event
+    // console.log("elemento que recibo otro: " + divHtmlElement.id) //ejemplo: tasca2
     const data = ev.dataTransfer.getData("text");
     const source = document.getElementById(data);
     //alert("Dropped")
@@ -222,14 +222,16 @@ function toCheck(id, imageElement){
         imageElement.name = "check"
         taskID.getElementsByClassName("textitem")[1].style.display = "none"
         taskID.getElementsByClassName("textitem")[2].style.display = "block"
+
+        updateTaskToKtor(id, inputText1, inputText3, true)
       }
       else{
         imageElement.src = "../Web/img/botones/sincheck.png"
         imageElement.name = "sincheck"
         taskID.getElementsByClassName("textitem")[1].style.display = "block"
         taskID.getElementsByClassName("textitem")[2].style.display = "none"
+        updateTaskToKtor(id, inputText1, inputText2, false)
       }
-
 }
 
 
@@ -266,7 +268,7 @@ function editar(item, contenedor){
 
     var it = 0
     for (const element of item.getElementsByClassName("textitem")){
-      console.log("[" + it + "]: " + element.outerHTML)
+
       it++
     }
 
@@ -276,37 +278,44 @@ function editar(item, contenedor){
       edit = false
     } else {
       input = "<h1 class=\"textitem\">" + document.getElementById('editarNom').value + "</h1>"
+      h1Text = document.getElementById('editarNom').value
       item.getElementsByClassName("textitem")[0].outerHTML = input
       edit = true
     }
   }
 
+  if(itscheck.name == "sincheck"){
+    console.log(h1Text)
+   updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false)
+  }
+
+
 }
 
-function addSaveTask() {
-  fetch('http://0.0.0.0:8080/add',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({id: 3, firstName: "Jet", lastName: "Brains"})
-    })
-    .then(response => response.text())
-    .then(data => {
-      console.log('Success:', data);
-      alert(data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
+// function addSaveTask() {
+//   fetch('http://0.0.0.0:8080/add',
+//     {
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//       method: "POST",
+//       body: JSON.stringify({id: 3, firstName: "Jet", lastName: "Brains"})
+//     })
+//     .then(response => response.text())
+//     .then(data => {
+//       console.log('Success:', data);
+//       alert(data);
+//     })
+//     .catch((error) => {
+//       console.error('Error:', error);
+//     });
+// }
 
 const URL_ADD= "http://0.0.0.0:8080/todoitems/add"
 
 function addTaskToKtor(id, title, date, checked) {
-  console.log(id,title,date,checked)
+  // console.log(id,title,date,checked)
   fetch(URL_ADD,
     {
       method: "POST",
@@ -335,6 +344,43 @@ function deleteTaskToKtor(id) {
       },
       body: JSON.stringify({
         id: id
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
+const URL_UPDATE= "http://0.0.0.0:8080/update/"
+
+function updateTaskToKtor(id, title, date, checked) {
+  fetch(URL_UPDATE+id,
+    {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        title: title,
+        date: date,
+        checked: checked
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
+const URL_LASTID= "http://0.0.0.0:8080/todoitems/lastID"
+
+function lastIDTaskToKtor() {
+  fetch(URL_LASTID,
+    {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+
       })
     })
     .then(response => console.log(response))
