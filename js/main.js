@@ -9,15 +9,35 @@ class Task {
 
 var listTasks = []
 
-function main() {
-  alert("Cuadro de diálogo")
-}
+const URL_LIST = "http://0.0.0.0:8080/todoitems"
+const URL_DELETE = "http://0.0.0.0:8080/delete/"
+const URL_UPDATE = "http://0.0.0.0:8080/update/"
+const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
+const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
 
-var taskID = 0
+var unparsedJSONArray = []
+var taskID
+fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
 
-const URL_LASTID= "http://0.0.0.0:8080/todoitems/lastID"
-fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json()))
+//execute this after page loads
+document.addEventListener('DOMContentLoaded', function() {
+  fetch(URL_LIST).then(async (result) => unparsedJSONArray = await result.json()).catch(function(){
+    console.log("CUIDAO' ERRRMANOOOOO: No se ha podido conectar con el servidor!")
+    const aviso = document.getElementById("avisoGuardado")
+    aviso.style.backgroundColor = "#FF0000"
+    aviso.style.fontSize = "34px"
+    aviso.style.color = "#FFFFFF"
+    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\n(Todos los datos se borrarán al recargar la página). No cree nuevas tareas!"
+  });
 
+  if (unparsedJSONArray.size === 0){
+      console.log("¡Lista vacía!")
+  }
+
+  for (let i = 0; i < unparsedJSONArray.size; i++) {
+    addTask(unparsedJSONArray[i].id, unparsedJSONArray[i].title, unparsedJSONArray[i].date, null, true)
+  }
+}, false);
 
 var checkDraggable = false
 function showTaskCreator(){
@@ -59,33 +79,39 @@ function setTodayValue(){
   document.getElementById("tareaDate").value = today;
 }
 
+function putTask(fromJson) {
+  if (!fromJson) {
+    addTask(null, document.getElementById("tareaNombre").value, document.getElementById("tareaDate").value, document.getElementById("tareaTime").value, false)
+  }
+}
 
-
-function addTask(){
+function addTask(id, name, date, time, isImported){
   // console.log("Nombre:" + document.getElementById("tareaNombre").value)
   // console.log("Fecha:" + document.getElementById("tareaDate").value)
   // console.log("Hora:" + document.getElementById("tareaTime").value)
 
-  if (document.getElementById("tareaNombre").value == ""){
+  if (name === ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
     return null
   }
 
-  date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
-
   var navToAppend = document.getElementsByTagName("nav")[1];
-  taskID++;
+  var finalId;
+
+  if (!isImported) {
+    taskID++;
+    finalId = taskID
+  } else {
+    finalId = id
+  }
 
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
-  divPrincipal.id = `${taskID}`;
+  divPrincipal.id = `${finalId}`;
   divPrincipal.setAttribute("draggable", false)
 
   var div1 = document.createElement("div");
   div1.className = "items";
-
-  var askTask = document.getElementById(divPrincipal)
-
   var input1 = document.createElement("input")
   input1.className = "vertical-center"
   input1.type = "image"
@@ -103,20 +129,22 @@ function addTask(){
 
   var h1 = document.createElement("h1")
   h1.className = "textitem"
-  h1.textContent = document.getElementById("tareaNombre").value
+  h1.textContent = name
 
   var p1 = document.createElement("p")
   p1.className = "textitem"
   p1.style.display = "block"
-  if (document.getElementById("tareaDate").value != "" && document.getElementById("tareaTime").value != "") {
-    p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value + "h"
-  } else if (document.getElementById("tareaDate").value == "" && document.getElementById("tareaTime").value == "") {
-    p1.textContent = "Lo más pronto posible"
-  } else if (document.getElementById("tareaTime").value == "") {
-    p1.textContent = "Antes del " + parseDate(document.getElementById("tareaDate").value).toLowerCase()
-  } else if (document.getElementById("tareaDate").value == "") {
-    p1.textContent = "A las " + document.getElementById("tareaTime").value + "h"
-  }
+  if (!isImported) {
+    if (date !== "" && time !== "") {
+      p1.textContent = parseDate(date) + " a las " + time + "h"
+    } else if (date === "" && time === "") {
+      p1.textContent = "Lo más pronto posible"
+    } else if (time === "") {
+      p1.textContent = "Antes del " + parseDate(date).toLowerCase()
+    } else if (date === "") {
+      p1.textContent = "A las " + time + "h"
+    }
+  } else p1.textContent = date
 
   var p2 = document.createElement("p")
   p2.className = "textitem"
@@ -154,7 +182,9 @@ function addTask(){
   navToAppend.appendChild(divPrincipal)
 
 //(val id: String, var title: String, var date: String, var hour: String, var checked: Boolean)
-  addTaskToKtor(`${taskID}`, h1.textContent, p1.textContent, false)
+  if (!isImported){
+    addTaskToKtor(`${finalId}`, h1.textContent, p1.textContent, false)
+  }
 }
 
 function addNewTaskToList(divHtmlElement) {
@@ -189,8 +219,8 @@ function orderList(idTransfer, idReceiver) {
   let indexToChange;
   let elementToChange;
   for (let i = 0; i < listTasks.length; i++) {
-    if (listTasks[i].id == idReceiver) indexWherePut = i
-    if (listTasks[i].id == idTransfer) {
+    if (listTasks[i].id === idReceiver) indexWherePut = i
+    if (listTasks[i].id === idTransfer) {
       indexToChange = i
       elementToChange = listTasks[i]
     }
@@ -208,7 +238,8 @@ function renderList() {
   //TODO mejorar el borrado de los hijos
   while (navToAppend.firstChild){
     navToAppend.removeChild(navToAppend.firstChild);
-  };
+  }
+
   for (let i = 0; i < listTasks.length; i++){
     navToAppend.appendChild(listTasks[i])
   }
@@ -220,7 +251,7 @@ function toCheck(id, imageElement){
       var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
       var inputText3 = taskID.getElementsByClassName("textitem")[2].innerHTML;
 
-      if(imageElement.name == "sincheck"){
+      if(imageElement.name === "sincheck"){
         imageElement.src = "../Web/img/botones/completado.png";
         imageElement.name = "check"
         taskID.getElementsByClassName("textitem")[1].style.display = "none"
@@ -249,7 +280,7 @@ function remove(element){
 }
 
 function parseDate(date){
-  if (date == "") return ""
+  if (date === "") return ""
   else {
     var fecha = date.split("-")
     var dia = fecha[2]
@@ -266,7 +297,7 @@ function editar(item, contenedor){
   var items1 = contenedor.getElementsByClassName("items")[0]
   var itscheck = items1.getElementsByTagName("input")[0]
 
-  if (itscheck.name == "sincheck"){
+  if (itscheck.name === "sincheck"){
     var input = ""
 
     var it = 0
@@ -287,7 +318,7 @@ function editar(item, contenedor){
     }
   }
 
-  if(itscheck.name == "sincheck"){
+  if(itscheck.name === "sincheck"){
     console.log(h1Text)
    updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false)
   }
@@ -315,8 +346,6 @@ function editar(item, contenedor){
 //     });
 // }
 
-const URL_ADD= "http://0.0.0.0:8080/todoitems/add"
-
 function addTaskToKtor(id, title, date, checked) {
   // console.log(id,title,date,checked)
   fetch(URL_ADD,
@@ -336,8 +365,6 @@ function addTaskToKtor(id, title, date, checked) {
     .then(err => console.log(err))
 }
 
-const URL_DELETE= "http://0.0.0.0:8080/delete/"
-
 function deleteTaskToKtor(id) {
   fetch(URL_DELETE+id,
     {
@@ -352,8 +379,6 @@ function deleteTaskToKtor(id) {
     .then(response => console.log(response))
     .then(err => console.log(err))
 }
-
-const URL_UPDATE= "http://0.0.0.0:8080/update/"
 
 function updateTaskToKtor(id, title, date, checked) {
   fetch(URL_UPDATE+id,
