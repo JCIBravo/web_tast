@@ -19,26 +19,6 @@ var unparsedJSONArray = []
 var taskID
 fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
 
-//execute this after page loads
-document.addEventListener('DOMContentLoaded', function() {
-  fetch(URL_LIST).then(async (result) => unparsedJSONArray = await result.json()).catch(function(){
-    console.log("CUIDAO' ERRRMANOOOOO: No se ha podido conectar con el servidor!")
-    const aviso = document.getElementById("avisoGuardado")
-    aviso.style.backgroundColor = "#FF0000"
-    aviso.style.fontSize = "34px"
-    aviso.style.color = "#FFFFFF"
-    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\n(Todos los datos se borrarán al recargar la página). No cree nuevas tareas!"
-  });
-
-  if (unparsedJSONArray.size === 0){
-      console.log("¡Lista vacía!")
-  }
-
-  for (let i = 0; i < unparsedJSONArray.size; i++) {
-    addTask(unparsedJSONArray[i].id, unparsedJSONArray[i].title, unparsedJSONArray[i].date, null, true)
-  }
-}, false);
-
 var checkDraggable = false
 function showTaskCreator(){
   var divElement = document.getElementById("generarTasca");
@@ -346,6 +326,20 @@ function editar(item, contenedor){
 //     });
 // }
 
+function getKtorData() {
+  fetch(URL_LIST, {
+    method: "GET"
+  }).then(function(response) {
+    response.json().then(json => {
+      for (let i = 0; i < json.length; i++) {
+          addTask(json[i].id, json[i].title, json[i].date, null, true)
+      }
+    });
+  }).catch(function(err) {
+    console.log(err)
+  });
+}
+
 function addTaskToKtor(id, title, date, checked) {
   // console.log(id,title,date,checked)
   fetch(URL_ADD,
@@ -397,3 +391,7 @@ function updateTaskToKtor(id, title, date, checked) {
     .then(response => console.log(response))
     .then(err => console.log(err))
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+  getKtorData()
+});
