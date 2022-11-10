@@ -237,7 +237,7 @@ function toCheck(id, imageElement){
         taskID.getElementsByClassName("textitem")[1].style.display = "none"
         taskID.getElementsByClassName("textitem")[2].style.display = "block"
 
-        updateTaskToKtor(id, inputText1, inputText3, true)
+        updateTaskToKtor(id, inputText1, inputText2, true)
       }
       else{
         imageElement.src = "../Web/img/botones/sincheck.png"
