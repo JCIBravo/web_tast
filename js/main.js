@@ -15,7 +15,6 @@ const URL_UPDATE = "http://0.0.0.0:8080/update/"
 const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
 const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
 
-var unparsedJSONArray = []
 var taskID
 fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
 
@@ -100,7 +99,7 @@ function addTask(id, name, date, time, isImported){
   input1.alt = "Marcar como completado"
   input1.height = "45"
   input1.width = "45"
-  input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this)")
+  input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this, null)")
   div1.appendChild(input1)
   divPrincipal.appendChild(div1)
 
@@ -225,26 +224,38 @@ function renderList() {
   }
 }
 
-function toCheck(id, imageElement){
+function toCheck(id, imageElement, check){
       var taskID = document.getElementById(id)
-      var inputText1 = taskID.getElementsByClassName("textitem")[0].innerHTML;
-      var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
-      var inputText3 = taskID.getElementsByClassName("textitem")[2].innerHTML;
+      var nomTasca = taskID.getElementsByClassName("textitem")[0].innerHTML;
+      var dataTasca = taskID.getElementsByClassName("textitem")[1].innerHTML;
 
-      if(imageElement.name === "sincheck"){
-        imageElement.src = "../Web/img/botones/completado.png";
-        imageElement.name = "check"
-        taskID.getElementsByClassName("textitem")[1].style.display = "none"
-        taskID.getElementsByClassName("textitem")[2].style.display = "block"
+      if (imageElement != null || check == null) {
+        if (imageElement.name === "sincheck") {
+          imageElement.src = "../Web/img/botones/completado.png";
+          imageElement.name = "check"
+          taskID.getElementsByClassName("textitem")[1].style.display = "none"
+          taskID.getElementsByClassName("textitem")[2].style.display = "block"
 
-        updateTaskToKtor(id, inputText1, inputText2, true)
-      }
-      else{
-        imageElement.src = "../Web/img/botones/sincheck.png"
-        imageElement.name = "sincheck"
-        taskID.getElementsByClassName("textitem")[1].style.display = "block"
-        taskID.getElementsByClassName("textitem")[2].style.display = "none"
-        updateTaskToKtor(id, inputText1, inputText2, false)
+          updateTaskToKtor(id, nomTasca, dataTasca, true)
+        } else {
+          imageElement.src = "../Web/img/botones/sincheck.png"
+          imageElement.name = "sincheck"
+          taskID.getElementsByClassName("textitem")[1].style.display = "block"
+          taskID.getElementsByClassName("textitem")[2].style.display = "none"
+          updateTaskToKtor(id, nomTasca, dataTasca, false)
+        }
+      } else {
+        if (check === true){
+          taskID.getElementsByTagName("input")[0].src = "../Web/img/botones/completado.png"
+          taskID.getElementsByTagName("input")[0].name = "check"
+          taskID.getElementsByClassName("textitem")[1].style.display = "none"
+          taskID.getElementsByClassName("textitem")[2].style.display = "block"
+        } else {
+          taskID.getElementsByTagName("input")[0].src = "../Web/img/botones/sincheck.png"
+          taskID.getElementsByTagName("input")[0].name = "sincheck"
+          taskID.getElementsByClassName("textitem")[1].style.display = "block"
+          taskID.getElementsByClassName("textitem")[2].style.display = "none"
+        }
       }
 }
 
@@ -333,10 +344,22 @@ function getKtorData() {
     response.json().then(json => {
       for (let i = 0; i < json.length; i++) {
           addTask(json[i].id, json[i].title, json[i].date, null, true)
+          toCheck(json[i].id, null, json[i].checked)
       }
     });
   }).catch(function(err) {
-    console.log(err)
+    console.log("CUIDAO' ERRRMANOOOOO: No se ha podido conectar con el servidor!\n\nDetalles: " + err)
+    const aviso = document.getElementById("avisoGuardado")
+    aviso.style.backgroundColor = "#FF0000"
+    aviso.style.fontSize = "34px"
+    aviso.style.color = "#FFFFFF"
+    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\nLa creación de tareas ha sido desactivada. Verifique la conexión y recargue la página."
+
+    var form = document.getElementById("formulariTasques");
+    var elements = form.elements;
+    for (var i = 0, len = elements.length; i < len; ++i) {
+      elements[i].disabled = true;
+    }
   });
 }
 
