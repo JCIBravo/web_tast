@@ -22,6 +22,17 @@
             <li><a href="#" onclick="showTaskCreator(); return false;">Reordenar tareas</a></li>
           </ul>
           <div id="generarTasca">
+            <form id="formulariTasques2">
+              <label><b>Nueva tarea ---></b> || Nombre:</label>
+              <input type="text" id="tareaNombre2" required>
+              <label> || Fecha:</label>
+              <input type="date" id="tareaDate2" required>
+              <input type="button" onclick="setTodayValue()" value="Hoy">
+              <label> || Hora:</label>
+              <input type="time" id="tareaTime2" required>
+              <input type="button" onclick="putTask(false)" value="Crear tarea">
+            </form>
+            <br><br>
             <form id="formulariTasques">
               <label><b>Nueva tarea ---></b> || Nombre:</label>
               <input type="text" id="tareaNombre" required>
@@ -33,7 +44,6 @@
               <input type="button" onclick="putTask(false)" value="Crear tarea">
             </form>
             <h5 id="avisoGuardado"><i>(Todos los datos se guardarán en la API de tareas)</i></h5>
-            <br>
           </div>
         </nav>
       </div>
