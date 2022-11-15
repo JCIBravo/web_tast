@@ -1,18 +1,12 @@
-class Task {
-  constructor(taskID, taskName, taskDate, taskTime) {
-    this.taskID = taskID;
-    this.taskName = taskName;
-    this.taskDate = taskDate;
-    this.taskTime = taskTime;
-  }
-}
 
 var listTasks = []
 
 const URL_LIST = "http://0.0.0.0:8080/todoitems"
+//const URL_LIST = "http://0.0.0.0:8080/todolists/all"
 const URL_DELETE = "http://0.0.0.0:8080/delete/"
 const URL_UPDATE = "http://0.0.0.0:8080/update/"
-const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
+// const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
+const URL_ADD = "http://0.0.0.0:8080/todolists/add"
 const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
 
 var taskID
@@ -31,15 +25,12 @@ function showTaskCreator(){
 
   var contenedorDraggable = document.getElementsByClassName("contenedor")
 
-
   if (!checkDraggable) {
     for (let i = 0; i < contenedorDraggable.length; i++) {
       contenedorDraggable[i].draggable = true
     }
-
     checkDraggable = true
   }
-
   else{
     for (let i = 0; i < contenedorDraggable.length; i++) {
       contenedorDraggable[i].draggable = false
@@ -57,6 +48,13 @@ function setTodayValue(){
   today = yyyy + '-' + mm + '-' + dd;
   document.getElementById("tareaDate").value = today;
 }
+
+var listTaskID = 0
+
+function addList(){
+
+}
+
 
 function putTask(fromJson) {
   if (!fromJson) {
