@@ -1,5 +1,45 @@
 
-var listTasks = []
+class Task {
+  constructor(taskID, taskName, taskDate, taskTime) {
+    this.taskID = taskID;
+    this.taskName = taskName;
+    this.taskDate = taskDate;
+    this.taskTime = taskTime;
+  }
+}
+
+var listOfListTasks = [[]]
+var listTaskID = 0
+var listTasks = listOfListTasks[0]
+
+
+function addList(){
+  var idList = listTaskID
+  var nameList = document.getElementById("nameList").value
+  listTaskID++
+
+  addOptionInSpinner(idList,nameList)
+
+  var list = []
+  if(idList!==1){
+    listOfListTasks.push(list)
+  }
+  console.log(listOfListTasks)
+  addListToKtor(idList,nameList)
+}
+
+function addOptionInSpinner(idList,nameList){
+  var optionElement = document.createElement("option")
+  optionElement.id = nameList
+  optionElement.value = idList
+  optionElement.textContent = nameList
+  var spinner = document.getElementById("seleccionarLista")
+  spinner.appendChild(optionElement)
+}
+
+function selectOptionSpinner(optionSpinner){
+  console.log(optionSpinner)
+}
 
 const URL_LIST = "http://0.0.0.0:8080/todoitems"
 //const URL_LIST = "http://0.0.0.0:8080/todolists/all"
@@ -8,6 +48,7 @@ const URL_UPDATE = "http://0.0.0.0:8080/update/"
 // const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
 const URL_ADD = "http://0.0.0.0:8080/todolists/add"
 const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
+const URL_ADDLIST = "http://0.0.0.0:8080/todolists/addlist"
 
 var taskID
 fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
@@ -48,13 +89,6 @@ function setTodayValue(){
   today = yyyy + '-' + mm + '-' + dd;
   document.getElementById("tareaDate").value = today;
 }
-
-var listTaskID = 0
-
-function addList(){
-
-}
-
 
 function putTask(fromJson) {
   if (!fromJson) {
@@ -315,25 +349,6 @@ function editar(item, contenedor){
 
 }
 
-// function addSaveTask() {
-//   fetch('http://0.0.0.0:8080/add',
-//     {
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//       method: "POST",
-//       body: JSON.stringify({id: 3, firstName: "Jet", lastName: "Brains"})
-//     })
-//     .then(response => response.text())
-//     .then(data => {
-//       console.log('Success:', data);
-//       alert(data);
-//     })
-//     .catch((error) => {
-//       console.error('Error:', error);
-//     });
-// }
 
 function getKtorData() {
   fetch(URL_LIST, {
@@ -356,9 +371,26 @@ function getKtorData() {
     var form = document.getElementById("formulariTasques");
     var elements = form.elements;
     for (var i = 0, len = elements.length; i < len; ++i) {
-      elements[i].disabled = true;
+      //(true) desactiva el formulario cuando no esta conectado al ktor
+      elements[i].disabled = false;
     }
   });
+}
+
+function addListToKtor(id,name) {
+  fetch(URL_ADDLIST,
+    {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        name: name
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
 }
 
 function addTaskToKtor(id, title, date, checked) {
