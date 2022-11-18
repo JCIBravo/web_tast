@@ -25,3 +25,13 @@ a {
 body {
   background-color: #39537A;
 }
+.footer{
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: #D9D9D9;
+  text-align: center;
+}
+.footer p {
+  font-size: smaller;
+}
