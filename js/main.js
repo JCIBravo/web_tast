@@ -24,7 +24,6 @@ function addList(){
   if(idList!==1){
     listOfListTasks.push(list)
   }
-  console.log(listOfListTasks)
   addListToKtor(idList,nameList)
 }
 
@@ -39,6 +38,18 @@ function addOptionInSpinner(idList,nameList){
 
 function selectOptionSpinner(optionSpinner){
   console.log(optionSpinner)
+  listTasks = listOfListTasks[optionSpinner]
+  var removeTasks = document.getElementsByClassName("contenedor")
+
+  for (let i = removeTasks.length; i>0; i--){
+    removeTasks[i-1].remove()
+  }
+  console.log(listTasks[0].document.getElementsByClassName("contenedor")+"aaaaaaaaaaaaaaaa")
+  for (let i = 0; i<listTasks.length; i++){
+    // addTask(listTasks[i].document.id)
+
+  }
+  console.log(removeTasks)
 }
 
 const URL_LIST = "http://0.0.0.0:8080/todoitems"
