@@ -7,11 +7,12 @@ class Task {
     this.taskTime = taskTime;
   }
 }
+var listOfListTasksWithClass = [[]]
 
 var listOfListTasks = [[]]
 var listTaskID = 0
 var listTasks = listOfListTasks[0]
-
+var thisListOfTasks = 0
 
 function addList(){
   var idList = listTaskID
@@ -44,10 +45,9 @@ function selectOptionSpinner(optionSpinner){
   for (let i = removeTasks.length; i>0; i--){
     removeTasks[i-1].remove()
   }
-  console.log(listTasks[0].document.getElementsByClassName("contenedor")+"aaaaaaaaaaaaaaaa")
-  for (let i = 0; i<listTasks.length; i++){
-    // addTask(listTasks[i].document.id)
-
+  thisListOfTasks = optionSpinner
+  for(let numberTaskInList = 0 ; numberTaskInList<listOfListTasks[optionSpinner].length; numberTaskInList++){
+    addTask(listOfListTasks[optionSpinner][numberTaskInList].document.getElementsByName("div")[0].id)
   }
   console.log(removeTasks)
 }
@@ -103,11 +103,11 @@ function setTodayValue(){
 
 function putTask(fromJson) {
   if (!fromJson) {
-    addTask(null, document.getElementById("tareaNombre").value, document.getElementById("tareaDate").value, document.getElementById("tareaTime").value, false)
+    addTask(null, document.getElementById("tareaNombre").value, document.getElementById("tareaDate").value, document.getElementById("tareaTime").value, false, thisListOfTasks)
   }
 }
 
-function addTask(id, name, date, time, isImported){
+function addTask(id, name, date, time, isImported, idList){
   // console.log("Nombre:" + document.getElementById("tareaNombre").value)
   // console.log("Fecha:" + document.getElementById("tareaDate").value)
   // console.log("Hora:" + document.getElementById("tareaTime").value)
@@ -367,7 +367,7 @@ function getKtorData() {
   }).then(function(response) {
     response.json().then(json => {
       for (let i = 0; i < json.length; i++) {
-          addTask(json[i].id, json[i].title, json[i].date, null, true)
+          addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].listid)
           toCheck(json[i].id, null, json[i].checked)
       }
     });
@@ -404,7 +404,7 @@ function addListToKtor(id,name) {
     .then(err => console.log(err))
 }
 
-function addTaskToKtor(id, title, date, checked) {
+function addTaskToKtor(id, title, date, checked, listid) {
   // console.log(id,title,date,checked)
   fetch(URL_ADD,
     {
@@ -416,7 +416,8 @@ function addTaskToKtor(id, title, date, checked) {
         id: id,
         title: title,
         date: date,
-        checked: checked
+        checked: checked,
+        listid: listid
       })
     })
     .then(response => console.log(response))
@@ -438,7 +439,7 @@ function deleteTaskToKtor(id) {
     .then(err => console.log(err))
 }
 
-function updateTaskToKtor(id, title, date, checked) {
+function updateTaskToKtor(id, title, date, checked, listid) {
   fetch(URL_UPDATE+id,
     {
       method: "PUT",
@@ -449,7 +450,8 @@ function updateTaskToKtor(id, title, date, checked) {
         id: id,
         title: title,
         date: date,
-        checked: checked
+        checked: checked,
+        listid: listid
       })
     })
     .then(response => console.log(response))
