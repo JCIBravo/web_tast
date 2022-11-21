@@ -65,7 +65,7 @@ function addTask(){
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
   divPrincipal.id = `${taskID}`;
-  divPrincipal.setAttribute("draggable", false)
+  divPrincipal.setAttribute("draggable", "true")
 
   var div1 = document.createElement("div");
   div1.className = "items";
