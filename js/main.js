@@ -61,6 +61,7 @@ const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
 const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
 const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
 const URL_ADDLIST = "http://0.0.0.0:8080/todolists/add-list"
+const URL_GETLISTS = "http://0.0.0.0:8080/todolists/all-lists"
 
 var taskID
 fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
@@ -369,10 +370,10 @@ function getKtorData(idList) {
   }).then(function(response) {
     response.json().then(json => {
       for (let i = 0; i < json.length; i++) {
-        if (json[i].idList==thisListOfTasks) {
-          addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
-          toCheck(json[i].id, null, json[i].checked)
-        }
+
+        addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
+        toCheck(json[i].id, null, json[i].checked)
+
       }
     });
   }).catch(function(err) {
@@ -391,6 +392,26 @@ function getKtorData(idList) {
     }
   });
 }
+
+function getKtorDataLists() {
+  fetch(URL_GETLISTS, {
+    method: "GET"
+  }).then(function(response) {
+    response.json().then(json => {
+      for (let i = 0; i < json.length; i++) {
+
+        addList()
+        // addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
+        // toCheck(json[i].id, null, json[i].checked)
+      }
+    });
+  }).catch(function(err) {
+    console.log("error")
+  });
+}
+
+
+
 
 function addListToKtor(id,name) {
   fetch(URL_ADDLIST,
