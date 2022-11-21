@@ -1,3 +1,4 @@
+
 class Task {
   constructor(taskID, taskName, taskDate, taskTime) {
     this.taskID = taskID;
@@ -6,33 +7,83 @@ class Task {
     this.taskTime = taskTime;
   }
 }
+var listOfListTasksWithClass = [[]]
 
-var listTasks = []
+var listOfListTasks = [[]]
+var listTaskID = 0
+var listTasks = listOfListTasks[0]
+var thisListOfTasks = 0
 
-var taskID = 0
+function addList(){
+  var idList = listTaskID
+  var nameList = document.getElementById("nameList").value
+  listTaskID++
+
+  addOptionInSpinner(idList,nameList)
+
+  var list = []
+  if(idList!==1){
+    listOfListTasks.push(list)
+  }
+  addListToKtor(idList,nameList)
+}
+
+function addOptionInSpinner(idList,nameList){
+  var optionElement = document.createElement("option")
+  optionElement.id = nameList
+  optionElement.value = idList
+  optionElement.textContent = nameList
+  var spinner = document.getElementById("seleccionarLista")
+  spinner.appendChild(optionElement)
+}
+
+function selectOptionSpinner(optionSpinner){
+  console.log(optionSpinner)
+  listTasks = listOfListTasks[optionSpinner]
+  var removeTasks = document.getElementsByClassName("contenedor")
+
+  for (let i = removeTasks.length; i>0; i--){
+    removeTasks[i-1].remove()
+  }
+  thisListOfTasks = optionSpinner
+  getKtorData(optionSpinner)
+  // for(let numberTaskInList = 0 ; numberTaskInList<listOfListTasks[optionSpinner].length; numberTaskInList++){
+  //   addTask(listOfListTasks[optionSpinner][numberTaskInList].document.getElementsByName("div")[0].id)
+  // }
+  console.log(removeTasks)
+}
+
+const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
+//const URL_LIST = "http://0.0.0.0:8080/todolists/all"
+const URL_DELETE = "http://0.0.0.0:8080/delete-task/"
+const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
+// const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
+const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
+const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
+const URL_ADDLIST = "http://0.0.0.0:8080/todolists/add-list"
+
+var taskID
+fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
 
 var checkDraggable = false
 function showTaskCreator(){
   var divElement = document.getElementById("generarTasca");
   if (divElement.style.display === "none") {
     divElement.style.display = "block";
-    console.log("showing");
+    // console.log("showing");
   } else {
     divElement.style.display = "none";
-    console.log("hiding");
+    // console.log("hiding");
   }
 
   var contenedorDraggable = document.getElementsByClassName("contenedor")
-
 
   if (!checkDraggable) {
     for (let i = 0; i < contenedorDraggable.length; i++) {
       contenedorDraggable[i].draggable = true
     }
-
     checkDraggable = true
   }
-
   else{
     for (let i = 0; i < contenedorDraggable.length; i++) {
       contenedorDraggable[i].draggable = false
@@ -51,27 +102,39 @@ function setTodayValue(){
   document.getElementById("tareaDate").value = today;
 }
 
-function addTask(){
-  if (document.getElementById("tareaNombre").value == ""){
+function putTask(fromJson) {
+  if (!fromJson) {
+    addTask(null, document.getElementById("tareaNombre").value, document.getElementById("tareaDate").value, document.getElementById("tareaTime").value, false, thisListOfTasks)
+  }
+}
+
+function addTask(id, name, date, time, isImported, idList){
+  // console.log("Nombre:" + document.getElementById("tareaNombre").value)
+  // console.log("Fecha:" + document.getElementById("tareaDate").value)
+  // console.log("Hora:" + document.getElementById("tareaTime").value)
+
+  if (name === ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
     return null
   }
 
-  date = document.getElementById("tareaDate") + document.getElementById("tareaTime")
-
   var navToAppend = document.getElementsByTagName("nav")[1];
-  taskID++;
+  var finalId;
+
+  if (!isImported) {
+    taskID++;
+    finalId = taskID
+  } else {
+    finalId = id
+  }
 
   var divPrincipal = document.createElement("div");
   divPrincipal.className = "contenedor";
-  divPrincipal.id = `${taskID}`;
-  divPrincipal.setAttribute("draggable", "true")
+  divPrincipal.id = `${finalId}`;
+  divPrincipal.setAttribute("draggable", false)
 
   var div1 = document.createElement("div");
   div1.className = "items";
-
-  // var askTask = document.getElementById(divPrincipal)
-
   var input1 = document.createElement("input")
   input1.className = "vertical-center"
   input1.type = "image"
@@ -80,21 +143,32 @@ function addTask(){
   input1.alt = "Marcar como completado"
   input1.height = "45"
   input1.width = "45"
-  input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this)")
+  input1.setAttribute("onclick", "toCheck(this.parentElement.parentElement.id, this, null)")
   div1.appendChild(input1)
   divPrincipal.appendChild(div1)
 
   var div2 = document.createElement("div")
   div2.className = "items"
+  div2.id = idList
 
   var h1 = document.createElement("h1")
   h1.className = "textitem"
-  h1.textContent = document.getElementById("tareaNombre").value
+  h1.textContent = name
 
   var p1 = document.createElement("p")
   p1.className = "textitem"
   p1.style.display = "block"
-  p1.textContent = parseDate(document.getElementById("tareaDate").value) + " a las " + document.getElementById("tareaTime").value
+  if (!isImported) {
+    if (date !== "" && time !== "") {
+      p1.textContent = parseDate(date) + " a las " + time + "h"
+    } else if (date === "" && time === "") {
+      p1.textContent = "Lo más pronto posible"
+    } else if (time === "") {
+      p1.textContent = "Antes del " + parseDate(date).toLowerCase()
+    } else if (date === "") {
+      p1.textContent = "A las " + time + "h"
+    }
+  } else p1.textContent = date
 
   var p2 = document.createElement("p")
   p2.className = "textitem"
@@ -108,6 +182,14 @@ function addTask(){
   inputEliminar.height = "45"
   inputEliminar.width = "45"
   inputEliminar.setAttribute("onclick", "remove(this.parentElement.parentElement)")
+
+  var inputEditar = div2.appendChild(document.createElement("input"))
+  inputEditar.className = "editar"
+  inputEditar.type = "image"
+  inputEditar.src = "./img/botones/editar.png"
+  inputEditar.height = "45"
+  inputEditar.width = "45"
+  inputEditar.setAttribute("onclick", "editar(this.parentElement,this.parentElement.parentElement)")
 
 
   div2.appendChild(h1)
@@ -124,7 +206,9 @@ function addTask(){
   navToAppend.appendChild(divPrincipal)
 
 //(val id: String, var title: String, var date: String, var hour: String, var checked: Boolean)
-  addTaskToKtor(`${taskID}`, h1.textContent, p1.textContent, false)
+  if (!isImported){
+    addTaskToKtor(`${finalId}`, h1.textContent, p1.textContent, false, div2.id)
+  }
 }
 
 function addNewTaskToList(divHtmlElement) {
@@ -134,17 +218,17 @@ function addNewTaskToList(divHtmlElement) {
 
 function addListenersToHtmlElement(divHtmlElement) {
   divHtmlElement.addEventListener("dragstart", (ev) => {
-    console.log("dragStart: " + ev.target.id);
+    // console.log("dragStart: " + ev.target.id);
     ev.dataTransfer.setData("text/plain", ev.target.id)
   });
   divHtmlElement.addEventListener("dragover", (ev) => {
     ev.preventDefault();
-    console.log("dragOver: " + ev.target.id);
+    // console.log("dragOver: " + ev.target.id);
   });
   divHtmlElement.addEventListener("drop", (ev) => {
     ev.preventDefault();
-    console.log("evento: " + ev) //es el tipo de evento que se realizó, ejemplo:  drag event
-    console.log("elemento que recibo otro: " + divHtmlElement.id) //ejemplo: tasca2
+    // console.log("evento: " + ev) //es el tipo de evento que se realizó, ejemplo:  drag event
+    // console.log("elemento que recibo otro: " + divHtmlElement.id) //ejemplo: tasca2
     const data = ev.dataTransfer.getData("text");
     const source = document.getElementById(data);
     //alert("Dropped")
@@ -159,8 +243,8 @@ function orderList(idTransfer, idReceiver) {
   let indexToChange;
   let elementToChange;
   for (let i = 0; i < listTasks.length; i++) {
-    if (listTasks[i].id == idReceiver) indexWherePut = i
-    if (listTasks[i].id == idTransfer) {
+    if (listTasks[i].id === idReceiver) indexWherePut = i
+    if (listTasks[i].id === idTransfer) {
       indexToChange = i
       elementToChange = listTasks[i]
     }
@@ -178,32 +262,48 @@ function renderList() {
   //TODO mejorar el borrado de los hijos
   while (navToAppend.firstChild){
     navToAppend.removeChild(navToAppend.firstChild);
-  };
+  }
+
   for (let i = 0; i < listTasks.length; i++){
     navToAppend.appendChild(listTasks[i])
   }
 }
 
-function toCheck(id, imageElement){
+function toCheck(id, imageElement, check){
       var taskID = document.getElementById(id)
-      var inputText1 = taskID.getElementsByClassName("textitem")[0].innerHTML;
-      var inputText2 = taskID.getElementsByClassName("textitem")[1].innerHTML;
-      var inputText3 = taskID.getElementsByClassName("textitem")[2].innerHTML;
+      var nomTasca = taskID.getElementsByClassName("textitem")[0].innerHTML;
+      var dataTasca = taskID.getElementsByClassName("textitem")[1].innerHTML;
 
-      if(imageElement.name == "sincheck"){
-        imageElement.src = "../Web/img/botones/completado.png";
-        imageElement.name = "check"
-        taskID.getElementsByClassName("textitem")[1].style.display = "none"
-        taskID.getElementsByClassName("textitem")[2].style.display = "block"
-      }
-      else{
-        imageElement.src = "../Web/img/botones/sincheck.png"
-        imageElement.name = "sincheck"
-        taskID.getElementsByClassName("textitem")[1].style.display = "block"
-        taskID.getElementsByClassName("textitem")[2].style.display = "none"
-      }
+      if (imageElement != null || check == null) {
+        if (imageElement.name === "sincheck") {
+          imageElement.src = "../Web/img/botones/completado.png";
+          imageElement.name = "check"
+          taskID.getElementsByClassName("textitem")[1].style.display = "none"
+          taskID.getElementsByClassName("textitem")[2].style.display = "block"
 
+          updateTaskToKtor(id, nomTasca, dataTasca, true)
+        } else {
+          imageElement.src = "../Web/img/botones/sincheck.png"
+          imageElement.name = "sincheck"
+          taskID.getElementsByClassName("textitem")[1].style.display = "block"
+          taskID.getElementsByClassName("textitem")[2].style.display = "none"
+          updateTaskToKtor(id, nomTasca, dataTasca, false)
+        }
+      } else {
+        if (check === true){
+          taskID.getElementsByTagName("input")[0].src = "../Web/img/botones/completado.png"
+          taskID.getElementsByTagName("input")[0].name = "check"
+          taskID.getElementsByClassName("textitem")[1].style.display = "none"
+          taskID.getElementsByClassName("textitem")[2].style.display = "block"
+        } else {
+          taskID.getElementsByTagName("input")[0].src = "../Web/img/botones/sincheck.png"
+          taskID.getElementsByTagName("input")[0].name = "sincheck"
+          taskID.getElementsByClassName("textitem")[1].style.display = "block"
+          taskID.getElementsByClassName("textitem")[2].style.display = "none"
+        }
+      }
 }
+
 
 function remove(element){
   for (let i = 0; i < listTasks.length; i++){
@@ -216,18 +316,100 @@ function remove(element){
 }
 
 function parseDate(date){
-  var fecha = date.split("-")
-  var dia = fecha[2]
-  var mes = fecha[1]
-  var año = fecha[0]
+  if (date === "") return ""
+  else {
+    var fecha = date.split("-")
+    var dia = fecha[2]
+    var mes = fecha[1]
+    var año = fecha[0]
 
   return "Día " + dia + "/" + mes + "/" + año
 }
+}
 
-const URL_ADD= "http://0.0.0.0:8080/todoitems/add"
+var edit = true
 
-function addTaskToKtor(id, title, date, checked) {
-  console.log(id,title,date,checked)
+function editar(item, contenedor){
+  var items1 = contenedor.getElementsByClassName("items")[0]
+  var itscheck = items1.getElementsByTagName("input")[0]
+
+  if (itscheck.name === "sincheck"){
+    var input = ""
+
+    var it = 0
+    for (const element of item.getElementsByClassName("textitem")){
+
+      it++
+    }
+
+    if (edit){
+      input = item.getElementsByClassName("textitem")[0].textContent
+      item.getElementsByClassName("textitem")[0].innerHTML = "<input id='editarNom' value='"+input+"'>"
+      edit = false
+    } else {
+      input = "<h1 class=\"textitem\">" + document.getElementById('editarNom').value + "</h1>"
+      h1Text = document.getElementById('editarNom').value
+      item.getElementsByClassName("textitem")[0].outerHTML = input
+      edit = true
+    }
+  }
+
+  if(itscheck.name === "sincheck"){
+    console.log(h1Text)
+   updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false)
+  }
+
+
+}
+
+
+function getKtorData(idList) {
+  fetch(URL_LIST+idList, {
+    method: "GET"
+  }).then(function(response) {
+    response.json().then(json => {
+      for (let i = 0; i < json.length; i++) {
+        if (json[i].idList==thisListOfTasks) {
+          addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
+          toCheck(json[i].id, null, json[i].checked)
+        }
+      }
+    });
+  }).catch(function(err) {
+    console.log("CUIDAO' ERRRMANOOOOO: No se ha podido conectar con el servidor!\n\nDetalles: " + err)
+    const aviso = document.getElementById("avisoGuardado")
+    aviso.style.backgroundColor = "#FF0000"
+    aviso.style.fontSize = "34px"
+    aviso.style.color = "#FFFFFF"
+    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\nVerifique la conexión y recargue la página."
+
+    var form = document.getElementById("formulariTasques");
+    var elements = form.elements;
+    for (var i = 0, len = elements.length; i < len; ++i) {
+      //(true) desactiva el formulario cuando no esta conectado al ktor
+      elements[i].disabled = false;
+    }
+  });
+}
+
+function addListToKtor(id,name) {
+  fetch(URL_ADDLIST,
+    {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        name: name
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
+function addTaskToKtor(id, title, date, checked, listId) {
+  // console.log(id,title,date,checked)
   fetch(URL_ADD,
     {
       method: "POST",
@@ -238,14 +420,13 @@ function addTaskToKtor(id, title, date, checked) {
         id: id,
         title: title,
         date: date,
-        checked: checked
+        checked: checked,
+        idList: listId
       })
     })
     .then(response => console.log(response))
     .then(err => console.log(err))
 }
-
-const URL_DELETE= "http://0.0.0.0:8080/delete/"
 
 function deleteTaskToKtor(id) {
   fetch(URL_DELETE+id,
@@ -261,3 +442,26 @@ function deleteTaskToKtor(id) {
     .then(response => console.log(response))
     .then(err => console.log(err))
 }
+
+function updateTaskToKtor(id, title, date, checked, listId) {
+  fetch(URL_UPDATE+id,
+    {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+        title: title,
+        date: date,
+        checked: checked,
+        idList: listId
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+  getKtorData(thisListOfTasks)
+});

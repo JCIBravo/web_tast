@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ITB</title>
+    <title>ITB: ToDoList</title>
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../css/normalize.css">
@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../css/index.css">
   <meta name="theme-color" content="#fafafa">
   <script src="../js/main.js"></script>
-
+  <link rel="apple-touch-icon" href="../rememberme-high-resolution-logo-black-on-transparent-background.ico">
 </head>
 <body>
     <header>
@@ -22,6 +22,16 @@
             <li><a href="#" onclick="showTaskCreator(); return false;">Reordenar tareas</a></li>
           </ul>
           <div id="generarTasca">
+            <form id="formulariLista">
+              <label><b>Nueva lista ---></b> || Nombre:</label>
+              <input type="text" id="nameList" required>
+              <input type="button" onclick="addList()" value="Crear lista">
+              <label> || Selección de listas:</label>
+              <select id="seleccionarLista" required onclick="selectOptionSpinner(this.value)">
+<!--                <option value="test1">Test</option>-->
+              </select>
+            </form>
+            <br>
             <form id="formulariTasques">
               <label><b>Nueva tarea ---></b> || Nombre:</label>
               <input type="text" id="tareaNombre" required>
@@ -30,9 +40,9 @@
               <input type="button" onclick="setTodayValue()" value="Hoy">
               <label> || Hora:</label>
               <input type="time" id="tareaTime" required>
-              <input type="button" onclick="addTask()" value="Crear tarea">
+              <input type="button" onclick="putTask(false)" value="Crear tarea">
             </form>
-            <h5><i>(Todos los datos se borran al recargar la página)</i></h5>
+            <h5 id="avisoGuardado"><i>(Todos los datos se guardarán en la API de tareas)</i></h5>
             <br>
           </div>
         </nav>
@@ -41,5 +51,28 @@
     <nav class="bluebg">
 
     </nav>
+    <footer class="footer">
+      <p>
+        © Derechos Reservados 2001-2020 FreshMind Todos los Derechos Reservados.
+        © Derechos Reservados 2001-2020 EspacioLogopedico.com Derechos de Contenido Reservados.
+
+        DERECHOS DE AUTOR.
+        Todos los contenidos de este Sitio (Incluyendo, pero no limitado a, texto, logotipos, contenido, fotografías, audio, botones, nombres comerciales y vídeo) están sujetos a derechos de propiedad por las leyes de Derechos de Autor y demás Leyes relativas Internacionales a FreshMind i de terceros titulares de los mismos que han autorizado debidamente su inclusión.
+
+        En ningún caso se entenderá que se concede licencia alguna o se efectúa renuncia, transmisión, cesión total o parcial de dichos derechos ni se confiere ningún derecho, y en especial, de alteración, explotación, reproducción, distribución o comunicación publica sobre dichos contenido sin la previa autorización expresa de FreshMind o de los titulares correspondientes.
+
+        El uso de imágenes, fragmentos de videos y demás material que sea objeto de protección de los derechos de autor, será exclusivamente para fines educativos e informativos, y cualquier uso distinto como el lucro, reproducción, edición o modificación, será perseguido y sancionado por el respectivo titular de los Derechos de Autor.
+
+        DERECHOS DE USO
+        Queda prohibido copiar, reproducir, distribuir, publicar, transmitir, difundir, o en cualquier modo explotar cualquier parte de este servicio sin la autorización previa por escrito de FreshMind o de los titulares correspondientes. Sin embargo, usted podrá bajar material a su computadora personal para uso exclusivamente personal o educacional y no comercial limitado a una copia por página. Usted no podrá remover o alterar de la copia ninguna leyenda de Derechos de Autor o la que manifieste la autoría del material.
+
+        HIPERENLACES
+        EsapacioLogopedico.com no autoriza el uso de "frames", Logos o gráficos. Usted no requiere solicitar permiso para utilizar una liga de hipertexto solo si esta liga lo lleva a EspacioLogopedico.com en una ventana separada, y donde el URL de EspacioLogopedico.com sea claramente visible, siempre y cuando esta liga no tenga fines comerciales. En cualquier otro caso no se podrá realizar ningún vínculo a EspacioLogopedico.com desde otra web sin el previo y expreso consentimiento por escrito de FreshMind.
+
+        EXPLOTACIÓN COMERCIAL
+        FreshMind es la titular, en exclusiva, para la explotación comercial de EspacioLogopedico.com.
+      </p>
+    </footer>
 </body>
+
 </html>
