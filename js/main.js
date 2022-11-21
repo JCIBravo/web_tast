@@ -46,20 +46,21 @@ function selectOptionSpinner(optionSpinner){
     removeTasks[i-1].remove()
   }
   thisListOfTasks = optionSpinner
-  for(let numberTaskInList = 0 ; numberTaskInList<listOfListTasks[optionSpinner].length; numberTaskInList++){
-    addTask(listOfListTasks[optionSpinner][numberTaskInList].document.getElementsByName("div")[0].id)
-  }
+  getKtorData(optionSpinner)
+  // for(let numberTaskInList = 0 ; numberTaskInList<listOfListTasks[optionSpinner].length; numberTaskInList++){
+  //   addTask(listOfListTasks[optionSpinner][numberTaskInList].document.getElementsByName("div")[0].id)
+  // }
   console.log(removeTasks)
 }
 
-const URL_LIST = "http://0.0.0.0:8080/todoitems"
+const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
 //const URL_LIST = "http://0.0.0.0:8080/todolists/all"
-const URL_DELETE = "http://0.0.0.0:8080/delete/"
-const URL_UPDATE = "http://0.0.0.0:8080/update/"
+const URL_DELETE = "http://0.0.0.0:8080/delete-task/"
+const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
 // const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
-const URL_ADD = "http://0.0.0.0:8080/todolists/add"
+const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
 const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
-const URL_ADDLIST = "http://0.0.0.0:8080/todolists/addlist"
+const URL_ADDLIST = "http://0.0.0.0:8080/todolists/add-list"
 
 var taskID
 fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
@@ -148,6 +149,7 @@ function addTask(id, name, date, time, isImported, idList){
 
   var div2 = document.createElement("div")
   div2.className = "items"
+  div2.id = idList
 
   var h1 = document.createElement("h1")
   h1.className = "textitem"
@@ -205,7 +207,7 @@ function addTask(id, name, date, time, isImported, idList){
 
 //(val id: String, var title: String, var date: String, var hour: String, var checked: Boolean)
   if (!isImported){
-    addTaskToKtor(`${finalId}`, h1.textContent, p1.textContent, false)
+    addTaskToKtor(`${finalId}`, h1.textContent, p1.textContent, false, div2.id)
   }
 }
 
@@ -361,14 +363,16 @@ function editar(item, contenedor){
 }
 
 
-function getKtorData() {
-  fetch(URL_LIST, {
+function getKtorData(idList) {
+  fetch(URL_LIST+idList, {
     method: "GET"
   }).then(function(response) {
     response.json().then(json => {
       for (let i = 0; i < json.length; i++) {
-          addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].listid)
+        if (json[i].idList==thisListOfTasks) {
+          addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
           toCheck(json[i].id, null, json[i].checked)
+        }
       }
     });
   }).catch(function(err) {
@@ -377,7 +381,7 @@ function getKtorData() {
     aviso.style.backgroundColor = "#FF0000"
     aviso.style.fontSize = "34px"
     aviso.style.color = "#FFFFFF"
-    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\nLa creación de tareas ha sido desactivada. Verifique la conexión y recargue la página."
+    aviso.innerText = "ALERTA: ¡No se ha podido conectar con el servidor!\nVerifique la conexión y recargue la página."
 
     var form = document.getElementById("formulariTasques");
     var elements = form.elements;
@@ -404,7 +408,7 @@ function addListToKtor(id,name) {
     .then(err => console.log(err))
 }
 
-function addTaskToKtor(id, title, date, checked, listid) {
+function addTaskToKtor(id, title, date, checked, listId) {
   // console.log(id,title,date,checked)
   fetch(URL_ADD,
     {
@@ -417,7 +421,7 @@ function addTaskToKtor(id, title, date, checked, listid) {
         title: title,
         date: date,
         checked: checked,
-        listid: listid
+        idList: listId
       })
     })
     .then(response => console.log(response))
@@ -439,7 +443,7 @@ function deleteTaskToKtor(id) {
     .then(err => console.log(err))
 }
 
-function updateTaskToKtor(id, title, date, checked, listid) {
+function updateTaskToKtor(id, title, date, checked, listId) {
   fetch(URL_UPDATE+id,
     {
       method: "PUT",
@@ -451,7 +455,7 @@ function updateTaskToKtor(id, title, date, checked, listid) {
         title: title,
         date: date,
         checked: checked,
-        listid: listid
+        idList: listId
       })
     })
     .then(response => console.log(response))
@@ -459,5 +463,5 @@ function updateTaskToKtor(id, title, date, checked, listid) {
 }
 
 document.addEventListener("DOMContentLoaded", function(){
-  getKtorData()
+  getKtorData(thisListOfTasks)
 });
