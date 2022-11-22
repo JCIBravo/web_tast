@@ -10,22 +10,28 @@ class Task {
 var listOfListTasksWithClass = [[]]
 
 var listOfListTasks = [[]]
-var listTaskID = 0
 var listTasks = listOfListTasks[0]
 var thisListOfTasks = 0
 
-function addList(){
-  var idList = listTaskID
-  var nameList = document.getElementById("nameList").value
-  listTaskID++
+function addList(isImported, name, id){
+  var idList;
+  if (!isImported){
+    idList = null
+  }
+  else {
+    idList = id
+  }
 
-  addOptionInSpinner(idList,nameList)
+  addOptionInSpinner(idList,name)
 
   var list = []
   if(idList!==1){
     listOfListTasks.push(list)
   }
-  addListToKtor(idList,nameList)
+
+  if (!isImported) {
+    addListToKtor(name)
+  }
 }
 
 function addOptionInSpinner(idList,nameList){
@@ -47,24 +53,18 @@ function selectOptionSpinner(optionSpinner){
   }
   thisListOfTasks = optionSpinner
   getKtorData(optionSpinner)
-  // for(let numberTaskInList = 0 ; numberTaskInList<listOfListTasks[optionSpinner].length; numberTaskInList++){
-  //   addTask(listOfListTasks[optionSpinner][numberTaskInList].document.getElementsByName("div")[0].id)
-  // }
   console.log(removeTasks)
 }
 
 const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
-//const URL_LIST = "http://0.0.0.0:8080/todolists/all"
-const URL_DELETE = "http://0.0.0.0:8080/delete-task/"
+const URL_DELETE = "http://0.0.0.0:8080/todolists/delete-task/"
 const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
-// const URL_ADD = "http://0.0.0.0:8080/todoitems/add"
 const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
-const URL_LASTID = "http://0.0.0.0:8080/todoitems/lastID"
 const URL_ADDLIST = "http://0.0.0.0:8080/todolists/add-list"
 const URL_GETLISTS = "http://0.0.0.0:8080/todolists/all-lists"
 
 var taskID
-fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
+// fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
 
 var checkDraggable = false
 function showTaskCreator(){
@@ -101,6 +101,12 @@ function setTodayValue(){
   var yyyy = today.getFullYear();
   today = yyyy + '-' + mm + '-' + dd;
   document.getElementById("tareaDate").value = today;
+}
+
+function putList(fromJson) {
+  if (!fromJson){
+    addList(false, document.getElementById("nameList").value, null)
+  }
 }
 
 function putTask(fromJson) {
@@ -282,13 +288,13 @@ function toCheck(id, imageElement, check){
           taskID.getElementsByClassName("textitem")[1].style.display = "none"
           taskID.getElementsByClassName("textitem")[2].style.display = "block"
 
-          updateTaskToKtor(id, nomTasca, dataTasca, true)
+          updateTaskToKtor(id, nomTasca, dataTasca, true,thisListOfTasks)
         } else {
           imageElement.src = "../Web/img/botones/sincheck.png"
           imageElement.name = "sincheck"
           taskID.getElementsByClassName("textitem")[1].style.display = "block"
           taskID.getElementsByClassName("textitem")[2].style.display = "none"
-          updateTaskToKtor(id, nomTasca, dataTasca, false)
+          updateTaskToKtor(id, nomTasca, dataTasca, false,thisListOfTasks)
         }
       } else {
         if (check === true){
@@ -357,7 +363,7 @@ function editar(item, contenedor){
 
   if(itscheck.name === "sincheck"){
     console.log(h1Text)
-   updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false)
+   updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false, thisListOfTasks)
   }
 
 
@@ -398,11 +404,9 @@ function getKtorDataLists() {
     method: "GET"
   }).then(function(response) {
     response.json().then(json => {
+      console.log(json)
       for (let i = 0; i < json.length; i++) {
-
-        addList()
-        // addTask(json[i].id, json[i].title, json[i].date, null, true, json[i].idList)
-        // toCheck(json[i].id, null, json[i].checked)
+        addList(true, json[i].name, json[i].id)
       }
     });
   }).catch(function(err) {
@@ -413,7 +417,7 @@ function getKtorDataLists() {
 
 
 
-function addListToKtor(id,name) {
+function addListToKtor(name) {
   fetch(URL_ADDLIST,
     {
       method: "POST",
@@ -421,7 +425,6 @@ function addListToKtor(id,name) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: id,
         name: name
       })
     })
@@ -438,7 +441,7 @@ function addTaskToKtor(id, title, date, checked, listId) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: id,
+        // id: id,
         title: title,
         date: date,
         checked: checked,
@@ -472,7 +475,6 @@ function updateTaskToKtor(id, title, date, checked, listId) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: id,
         title: title,
         date: date,
         checked: checked,
@@ -485,4 +487,5 @@ function updateTaskToKtor(id, title, date, checked, listId) {
 
 document.addEventListener("DOMContentLoaded", function(){
   getKtorData(thisListOfTasks)
+  getKtorDataLists()
 });
