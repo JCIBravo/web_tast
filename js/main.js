@@ -14,6 +14,7 @@ var listTasks = listOfListTasks[0]
 var thisListOfTasks = 0
 
 function addList(isImported, name, id){
+
   var idList;
   if (!isImported){
     idList = null
@@ -44,7 +45,6 @@ function addOptionInSpinner(idList,nameList){
 }
 
 function selectOptionSpinner(optionSpinner){
-  console.log(optionSpinner)
   listTasks = listOfListTasks[optionSpinner]
   var removeTasks = document.getElementsByClassName("contenedor")
 
@@ -53,15 +53,27 @@ function selectOptionSpinner(optionSpinner){
   }
   thisListOfTasks = optionSpinner
   getKtorData(optionSpinner)
-  console.log(removeTasks)
+  //console.log(removeTasks)
 }
 
+function deleteList(){
+
+  deleteListToKtor(thisListOfTasks)
+  let selectObject = document.getElementById("seleccionarLista");
+  let options = document.getElementsByTagName('option');
+  for (var i = selectObject.length; i>0; i--) {
+    selectObject.removeChild(options[i-1]);
+  }
+
+  getKtorDataLists()
+}
+const URL_DELETE_LIST = "http://0.0.0.0:8080/todolists/delete-list/"
 const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
 const URL_DELETE = "http://0.0.0.0:8080/todolists/delete-task/"
 const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
 const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
-const URL_ADDLIST = "http://0.0.0.0:8080/todolists/add-list"
-const URL_GETLISTS = "http://0.0.0.0:8080/todolists/all-lists"
+const URL_ADD_LIST = "http://0.0.0.0:8080/todolists/add-list"
+const URL_GET_LISTS = "http://0.0.0.0:8080/todolists/all-lists"
 
 var taskID
 // fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
@@ -400,11 +412,11 @@ function getKtorData(idList) {
 }
 
 function getKtorDataLists() {
-  fetch(URL_GETLISTS, {
+  fetch(URL_GET_LISTS, {
     method: "GET"
   }).then(function(response) {
     response.json().then(json => {
-      console.log(json)
+      //console.log(json)
       for (let i = 0; i < json.length; i++) {
         addList(true, json[i].name, json[i].id)
       }
@@ -418,7 +430,7 @@ function getKtorDataLists() {
 
 
 function addListToKtor(name) {
-  fetch(URL_ADDLIST,
+  fetch(URL_ADD_LIST,
     {
       method: "POST",
       headers: {
@@ -485,7 +497,23 @@ function updateTaskToKtor(id, title, date, checked, listId) {
     .then(err => console.log(err))
 }
 
+function deleteListToKtor(id) {
+  fetch(URL_DELETE_LIST+id,
+    {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+    .then(response => console.log(response))
+    .then(err => console.log(err))
+}
+
 document.addEventListener("DOMContentLoaded", function(){
   getKtorData(thisListOfTasks)
   getKtorDataLists()
 });
+
