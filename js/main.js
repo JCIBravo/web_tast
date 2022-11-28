@@ -60,8 +60,9 @@ function deleteList(){
   deleteListToKtor(thisListOfTasks)
   let selectObject = document.getElementById("seleccionarLista");
   for (let i = 0; i < selectObject.length; i++) {
-    if (selectObject.options[i].value === e.options[e.selectedIndex].value)
+    if (selectObject.options[i].value === e.options[e.selectedIndex].value) {
       selectObject.remove(i);
+    }
   }
 
   getKtorDataLists()
