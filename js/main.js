@@ -57,12 +57,11 @@ function selectOptionSpinner(optionSpinner){
 }
 
 function deleteList(){
-
   deleteListToKtor(thisListOfTasks)
   let selectObject = document.getElementById("seleccionarLista");
-  let options = document.getElementsByTagName('option');
-  for (var i = selectObject.length; i>0; i--) {
-    selectObject.removeChild(options[i-1]);
+  for (let i = 0; i < selectObject.length; i++) {
+    if (selectObject.options[i].value === e.options[e.selectedIndex].value)
+      selectObject.remove(i);
   }
 
   getKtorDataLists()
@@ -335,15 +334,14 @@ function remove(element){
 }
 
 function parseDate(date){
-  if (date === "") return ""
-  else {
-    var fecha = date.split("-")
-    var dia = fecha[2]
-    var mes = fecha[1]
-    var año = fecha[0]
-
-  return "Día " + dia + "/" + mes + "/" + año
-}
+    if (date === "") return ""
+    else {
+      var fecha = date.split("-")
+      var dia = fecha[2]
+      var mes = fecha[1]
+      var año = fecha[0]
+      return "Día " + dia + "/" + mes + "/" + año
+  }
 }
 
 var edit = true
@@ -377,8 +375,6 @@ function editar(item, contenedor){
     console.log(h1Text)
    updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false, thisListOfTasks)
   }
-
-
 }
 
 
