@@ -23,11 +23,11 @@
           </ul>
           <div id="generarTasca">
             <form id="formulariLista">
-              <label><b>Nueva lista ---></b> || Nombre:</label>
+              <label id="editlabel"><b>Nueva lista ---></b> || Nombre:</label>
               <input type="text" id="nameList" required>
               <input type="button" onclick="putList(false)" value="Crear lista">
               <label> || Selección de listas:</label>
-              <select id="seleccionarLista" required onclick="selectOptionSpinner(this.value)">
+              <select id="seleccionarLista" required onclick="selectOptionSpinner(this.value, this.value)">
 <!--                <option value="test1">Test</option>-->
               </select>
               <input type="button" onclick="editList()" value="Editar lista">

@@ -7,7 +7,18 @@ class Task {
     this.taskTime = taskTime;
   }
 }
-var listOfListTasksWithClass = [[]]
+
+const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
+const URL_DELETE = "http://0.0.0.0:8080/todolists/delete-task/"
+const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
+const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
+const URL_DELETE_LIST = "http://0.0.0.0:8080/todolists/delete-list/"
+const URL_ADD_LIST = "http://0.0.0.0:8080/todolists/add-list"
+const URL_GET_LISTS = "http://0.0.0.0:8080/todolists/all-lists"
+const URL_UPDATE_LIST = "http://0.0.0.0:8080/todolists/update-list/"
+const URL_ONE_LIST = "http://0.0.0.0:8080/todolists/list/"
+
+var listOfListTasksWithClass = []
 
 var listOfListTasks = [[]]
 var listTasks = listOfListTasks[0]
@@ -44,7 +55,8 @@ function addOptionInSpinner(idList,nameList){
   spinner.appendChild(optionElement)
 }
 
-function selectOptionSpinner(optionSpinner){
+function selectOptionSpinner(optionSpinner, nameOption){
+  console.log(nameOption)
   listTasks = listOfListTasks[optionSpinner]
   var removeTasks = document.getElementsByClassName("contenedor")
 
@@ -57,23 +69,35 @@ function selectOptionSpinner(optionSpinner){
 }
 
 function deleteList(){
-  deleteListToKtor(thisListOfTasks)
-  let selectObject = document.getElementById("seleccionarLista");
-  for (let i = 0; i < selectObject.length; i++) {
-    if (selectObject.options[i].value === e.options[e.selectedIndex].value) {
-      selectObject.remove(i);
+  deleteListToKtor(thisListOfTasks, function (){
+    let selectObject = document.getElementById("seleccionarLista");
+    let options = document.getElementsByTagName('option')
+    for (var i = options.length-1; i>=0; i--) {
+      options[i].remove()
     }
-  }
 
-  getKtorDataLists()
+    getKtorDataLists()
+  })
 }
-const URL_DELETE_LIST = "http://0.0.0.0:8080/todolists/delete-list/"
-const URL_LIST = "http://0.0.0.0:8080/todolists/list-own-tasks/"
-const URL_DELETE = "http://0.0.0.0:8080/todolists/delete-task/"
-const URL_UPDATE = "http://0.0.0.0:8080/todolists/update-task/"
-const URL_ADD = "http://0.0.0.0:8080/todolists/add-task"
-const URL_ADD_LIST = "http://0.0.0.0:8080/todolists/add-list"
-const URL_GET_LISTS = "http://0.0.0.0:8080/todolists/all-lists"
+
+var editListVar = true
+function editList(){
+  if (editListVar){
+    let editLabel = document.getElementById("editlabel")
+    editLabel.innerText = " || Editar Nombre:"
+    let selectObject = document.getElementById("seleccionarLista");
+    getKtorOneList(thisListOfTasks)
+
+    editListVar = false
+  }
+  else{
+    let editLabel = document.getElementById("editlabel")
+    editLabel.innerHTML = "<b>Nueva lista ---></b> || Nombre:"
+    document.getElementById("nameList").value = null
+    editListVar = true
+  }
+}
+
 
 var taskID
 // fetch(URL_LASTID).then(async (result) => taskID = parseInt(await result.json())).catch(function(){taskID = 0});
@@ -118,6 +142,7 @@ function setTodayValue(){
 function putList(fromJson) {
   if (!fromJson){
     addList(false, document.getElementById("nameList").value, null)
+    document.getElementById("nameList").value = null
   }
 }
 
@@ -423,7 +448,18 @@ function getKtorDataLists() {
   });
 }
 
-
+function getKtorOneList(id) {
+  fetch(URL_ONE_LIST+id, {
+    method: "GET"
+  }).then(function(response) {
+    response.json().then(json => {
+      //console.log(json)
+      document.getElementById("nameList").value = json[0].name
+    });
+  }).catch(function(err) {
+    console.log("error")
+  });
+}
 
 
 function addListToKtor(name) {
@@ -494,7 +530,7 @@ function updateTaskToKtor(id, title, date, checked, listId) {
     .then(err => console.log(err))
 }
 
-function deleteListToKtor(id) {
+function deleteListToKtor(id, onDeleted) {
   fetch(URL_DELETE_LIST+id,
     {
       method: "DELETE",
@@ -505,12 +541,35 @@ function deleteListToKtor(id) {
         id: id
       })
     })
+    .then(response => {
+      console.log(response)
+      onDeleted()
+    })
+    .then(err => console.log(err))
+}
+
+function updateListToKtor(id,name) {
+  fetch(URL_UPDATE_LIST+id,
+    {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name
+      })
+    })
     .then(response => console.log(response))
     .then(err => console.log(err))
 }
+
+
+
 
 document.addEventListener("DOMContentLoaded", function(){
   getKtorData(thisListOfTasks)
   getKtorDataLists()
 });
+
+
 
