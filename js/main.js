@@ -56,15 +56,17 @@ function addOptionInSpinner(idList,nameList){
 }
 
 function selectOptionSpinner(optionSpinner, nameOption){
-  console.log(nameOption)
-  listTasks = listOfListTasks[optionSpinner]
-  var removeTasks = document.getElementsByClassName("contenedor")
+  if(editListVar) {
+    console.log(nameOption)
+    listTasks = listOfListTasks[optionSpinner]
+    var removeTasks = document.getElementsByClassName("contenedor")
 
-  for (let i = removeTasks.length; i>0; i--){
-    removeTasks[i-1].remove()
+    for (let i = removeTasks.length; i > 0; i--) {
+      removeTasks[i - 1].remove()
+    }
+    thisListOfTasks = optionSpinner
+    getKtorData(optionSpinner)
   }
-  thisListOfTasks = optionSpinner
-  getKtorData(optionSpinner)
   //console.log(removeTasks)
 }
 
@@ -87,13 +89,15 @@ function editList(){
     editLabel.innerText = " || Editar Nombre:"
     let selectObject = document.getElementById("seleccionarLista");
     getKtorOneList(thisListOfTasks)
-
+    selectObject.setAttribute("unselectable", "on");
     editListVar = false
   }
   else{
     let editLabel = document.getElementById("editlabel")
     editLabel.innerHTML = "<b>Nueva lista ---></b> || Nombre:"
     document.getElementById("nameList").value = null
+    let selectObject = document.getElementById("seleccionarLista");
+    selectObject.setAttribute("unselectable", "off");
     editListVar = true
   }
 }
