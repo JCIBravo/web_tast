@@ -86,10 +86,10 @@ var editListVar = true
 function editList(){
   if (editListVar){
     let editLabel = document.getElementById("editlabel")
-    editLabel.innerText = " || Editar Nombre:"
+    editLabel.innerHTML = "<b>Renombrar lista ---></b> || Nombre:"
     let selectObject = document.getElementById("seleccionarLista");
     getKtorOneList(thisListOfTasks)
-    selectObject.setAttribute("unselectable", "on");
+    selectObject.disabled = true
     editListVar = false
   }
   else{
@@ -97,7 +97,8 @@ function editList(){
     editLabel.innerHTML = "<b>Nueva lista ---></b> || Nombre:"
     document.getElementById("nameList").value = null
     let selectObject = document.getElementById("seleccionarLista");
-    selectObject.setAttribute("unselectable", "off");
+    updateListToKtor()
+    selectObject.disabled = false
     editListVar = true
   }
 }
