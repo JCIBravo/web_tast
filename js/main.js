@@ -18,11 +18,11 @@ const URL_GET_LISTS = "http://0.0.0.0:8080/todolists/all-lists"
 const URL_UPDATE_LIST = "http://0.0.0.0:8080/todolists/update-list/"
 const URL_ONE_LIST = "http://0.0.0.0:8080/todolists/list/"
 
-var listOfListTasksWithClass = []
+var listOfListTasksWithClass = [[]]
 
 var listOfListTasks = [[]]
 var listTasks = listOfListTasks[0]
-var thisListOfTasks = 0
+var thisListOfTasks = document.getElementsByTagName('option')[0]
 
 function addList(isImported, name, id){
 
@@ -80,6 +80,8 @@ function deleteList(){
 
     getKtorDataLists()
   })
+  thisListOfTasks = document.getElementsByTagName('option')[0]
+  getKtorData(thisListOfTasks)
 }
 
 var editListVar = true
@@ -158,9 +160,9 @@ function putTask(fromJson) {
 }
 
 function addTask(id, name, date, time, isImported, idList){
-  // console.log("Nombre:" + document.getElementById("tareaNombre").value)
-  // console.log("Fecha:" + document.getElementById("tareaDate").value)
-  // console.log("Hora:" + document.getElementById("tareaTime").value)
+   console.log("Nombre:" + document.getElementById("tareaNombre").value)
+   console.log("Fecha:" + document.getElementById("tareaDate").value)
+   console.log("Hora:" + document.getElementById("tareaTime").value)
 
   if (name === ""){
     alert("Error añadiendo tarea.\n\nVerifique que la tarea tenga un nombre, una fecha válida y una hora puesta.")
@@ -251,12 +253,12 @@ function addTask(id, name, date, time, isImported, idList){
   document.getElementById("tareaDate").value = null
   document.getElementById("tareaTime").value = null
 
-  addNewTaskToList(divPrincipal)
+  //addNewTaskToList(divPrincipal)
   navToAppend.appendChild(divPrincipal)
 
 //(val id: String, var title: String, var date: String, var hour: String, var checked: Boolean)
   if (!isImported){
-    addTaskToKtor(`${finalId}`, h1.textContent, p1.textContent, false, div2.id)
+    addTaskToKtor(h1.textContent, p1.textContent, false, div2.id)
   }
 }
 
@@ -482,7 +484,7 @@ function addListToKtor(name) {
     .then(err => console.log(err))
 }
 
-function addTaskToKtor(id, title, date, checked, listId) {
+function addTaskToKtor(title, date, checked, listId) {
   // console.log(id,title,date,checked)
   fetch(URL_ADD,
     {
@@ -491,7 +493,6 @@ function addTaskToKtor(id, title, date, checked, listId) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        // id: id,
         title: title,
         date: date,
         checked: checked,
