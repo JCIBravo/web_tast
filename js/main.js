@@ -80,7 +80,7 @@ function deleteList(){
 
     getKtorDataLists()
   })
-  thisListOfTasks = document.getElementsByTagName('option')[0]
+  thisListOfTasks = document.getElementsByTagName('option')[0].value
   getKtorData(thisListOfTasks)
 }
 
@@ -91,17 +91,33 @@ function editList(){
     editLabel.innerHTML = "<b>Renombrar lista ---></b> || Nombre:"
     let selectObject = document.getElementById("seleccionarLista");
     getKtorOneList(thisListOfTasks)
-    selectObject.disabled = true
+    let form = document.getElementById("formulariLista");
+    let elements = form.elements;
+    for (let i = 0, len = elements.length; i < len; ++i) {
+      //(true) desactiva el formulario cuando no esta conectado al ktor
+      elements[i].disabled = true;
+    }
+    document.getElementById("nameList").disabled = false
+    document.getElementById("editListBtn").disabled = false
+    document.getElementById("seleccionarLista")
     editListVar = false
   }
   else{
     let editLabel = document.getElementById("editlabel")
     editLabel.innerHTML = "<b>Nueva lista ---></b> || Nombre:"
+    let name = document.getElementById("nameList").value
     document.getElementById("nameList").value = null
     let selectObject = document.getElementById("seleccionarLista");
-    updateListToKtor()
+    updateListToKtor(selectObject.value, name)
     selectObject.disabled = false
     editListVar = true
+
+    let form = document.getElementById("formulariLista");
+    let elements = form.elements;
+    for (let i = 0, len = elements.length; i < len; ++i) {
+      elements[i].disabled = false;
+    }
+    location.reload();
   }
 }
 
