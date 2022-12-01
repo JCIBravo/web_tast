@@ -373,11 +373,11 @@ function toCheck(id, imageElement, check){
 
 
 function remove(element){
-  for (let i = 0; i < listTasks.length; i++){
-    if (listTasks[i].id === element.id){
-      listTasks.splice(i,1)
-    }
-  }
+  // for (let i = 0; i < listTasks.length; i++){
+  //   if (listTasks[i].id === element.id){
+  //     listTasks.splice(i,1)
+  //   }
+  // }
   element.remove()
   deleteTaskToKtor(element.id)
 }
@@ -422,6 +422,7 @@ function editar(item, contenedor){
 
   if(itscheck.name === "sincheck"){
     console.log(h1Text)
+    console.log(item.getElementsByClassName("textitem")[1].innerHTML)
    updateTaskToKtor(contenedor.id, h1Text, item.getElementsByClassName("textitem")[1].innerHTML, false, thisListOfTasks)
   }
 }
