@@ -108,7 +108,7 @@ function editList(){
     let name = document.getElementById("nameList").value
     document.getElementById("nameList").value = null
     let selectObject = document.getElementById("seleccionarLista");
-    updateListToKtor(selectObject.value, name)
+    updateListToKtor(thisListOfTasks, name)
     selectObject.disabled = false
     editListVar = true
 
